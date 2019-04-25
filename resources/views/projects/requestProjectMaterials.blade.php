@@ -37,7 +37,7 @@
                                 <div class="form-example-wrap mg-t-30">
                                     <div class="form-example-int form-horizental">
                                         <div class="cmp-tb-hd cmp-int-hd">
-                                            <h2>Request Materials</h2>
+                                            <h2>Issue Materials</h2>
                                             <div class="breadcomb-report">
                                                 <a onclick="addRow()" data-placement="left" title="Add Coloumn" class="btn waves-effect"><i class="notika-icon notika-plus-symbol"></i></a>
                                             </div>
@@ -48,10 +48,12 @@
                                                     <tr>
                                                         <th>Category</th>
                                                         <th>Item</th>
+                                                        <th>Unit</th>
                                                         <th>Model no</th>
                                                         <th>Brand Name</th>
                                                         <th>Avalible Quantity</th>
                                                         <th>Requested Qty</th>
+                                                        <th>Issued To</th>
                                                         <th>Actions</th>
                                                     </tr>
                                                     <tr>
@@ -69,6 +71,9 @@
                                                             </select>
                                                         </td>
                                                         <td>
+                                                            <label class="unit">Unit</label>
+                                                        </td>
+                                                        <td>
                                                             <label class="model_no">Model no</label>
                                                         </td>
                                                         <td>
@@ -79,6 +84,9 @@
                                                         </td>
                                                         <td>
                                                             <input type="number" class="requested_qty form-control" style="width: 100px;" name="requested_qty[]" disabled required>
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" class="issued_to form-control" style="width: 100px;" name="issued_to[]" disabled required>
                                                         </td>
                                                         <td></td>
                                                     </tr>
@@ -116,6 +124,9 @@
                                     </select>
                                 </td>
                                 <td>
+                                    <label class="unit">Unit</label>
+                                </td>
+                                <td>
                                     <label class="model_no">Model no</label>
                                 </td>
                                 <td>
@@ -128,9 +139,11 @@
                                     <input type="number" class="requested_qty form-control" style="width: 100px;" name="requested_qty[]" disabled required>
                                 </td>
                                 <td>
+                                    <input type="text" class="issued_to form-control" style="width: 100px;" name="issued_to[]" disabled required>
+                                </td>
+                                <td>
                                     <a onclick="remove_row(this)" title="Remove Coloumn" class="btn-danger notika-btn-danger btn waves-effect"><i class="notika-icon notika-trash"></i></a>
                                 </td>
-
                             </tr>
                         </table>
                     </form>

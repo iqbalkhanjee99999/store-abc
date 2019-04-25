@@ -78,9 +78,12 @@
                                     <th>Item</th>
                                     <th>Brand</th>
                                     <th>Model No</th>
+                                    <th>Location</th>
                                     <th>Quantity</th>
                                     <th>Photo</th>
-                                    <th>Actions</th>
+                                    @if(Auth::user()->user_type != 3)
+                                        <th>Actions</th>
+                                    @endif
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -90,17 +93,39 @@
                                                 <td>{{$val->item_name}}</td>
                                                 <td>{{$val->brand_name}}</td>
                                                 <td>{{$val->model_no}}</td>
+                                                <td>{{$val->location}}</td>
                                                 <td style="color:indianred;font-weight: bold;">{{$val->total_qty}}</td>
                                                 <td><a  href="{{asset('attachments/items_images/'.$val->photo)}}"><i class="fa fa-image"></i></a></td>
-                                                <td>
-                                                    @if($val->is_idle == 0)
-                                                        <a  class="btn btn-success notika-btn-success" onclick="returnItem({{$val->project_item_id}})">Return To Store</a> &nbsp
-                                                        <a  class="btn btn-danger notika-btn-danger" onclick="markAsIdle({{$val->project_item_id}})">Idle Item</a>
-                                                    @else
-                                                        <a  class="btn btn-warning notika-btn-warning" onclick="markAsFunctional({{$val->project_item_id}})">Functional Item</a>
-                                                    @endif
-                                                </td>
+                                                @if(Auth::user()->user_type !=3)
+                                                    <td>
+                                                        @if($val->is_idle == 0)
+                                                            <a  class="btn btn-success notika-btn-success" data-toggle="modal" data-target="#myModal{{$val->project_item_id}}">Return To Store</a> &nbsp
+                                                            <a  class="btn btn-danger notika-btn-danger" onclick="markAsIdle({{$val->project_item_id}})">Idle Item</a>
+                                                        @else
+                                                            <a  class="btn btn-warning notika-btn-warning" onclick="markAsFunctional({{$val->project_item_id}})">Functional Item</a>
+                                                        @endif
+                                                    </td>
+                                                @endif
                                             </tr>
+
+                                            <div class="modal fade" id="myModal{{$val->project_item_id}}" role="dialog">
+                                                <div class="modal-dialog modal-md">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal">×</button>
+                                                            <h4 id="item_name">Return of {{$val->item_name}}/{{$val->brand_name}}</h4>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <label for="item_quantity">Enter Reason:</label>
+                                                            <textarea id="reason{{$val->project_item_id}}" name="reason"  rows="5" class="form-control" style="resize: none"></textarea>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-success notika-btn-success waves-effect" data-dismiss="modal"  onclick="returnItem({{$val->project_item_id}})">Submit</button>
+                                                            <button type="button" class="btn btn- waves-effect" data-dismiss="modal">Cancel</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                     @endforeach
                                 </tbody>
                                 <tfoot>
@@ -109,9 +134,12 @@
                                     <th>Item</th>
                                     <th>Brand Name</th>
                                     <th>Model No</th>
+                                    <th>Location</th>
                                     <th>Quantity</th>
                                     <th>Photo</th>
-                                    <th>Actions</th>
+                                    @if(Auth::user()->user_type != 3)
+                                        <th>Actions</th>
+                                    @endif
                                 </tr>
                                 </tfoot>
                             </table>

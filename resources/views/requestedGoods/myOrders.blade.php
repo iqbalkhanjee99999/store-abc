@@ -52,6 +52,7 @@
                                     <th>Description</th>
                                     <th>Model No</th>
                                     <th>Brand Name</th>
+                                    <th>Location</th>
                                     <th>Requested Qty</th>
                                     <th>Status</th>
                                 </tr>
@@ -63,6 +64,7 @@
                                             <td>{{$val->description}}</td>
                                             <td>{{$val->model_no}}</td>
                                             <td>{{$val->brand_name}}</td>
+                                            <td>{{$val->location}}</td>
                                             <td>{{$val->requested_qty}}</td>
                                                 <td>
                                                     @if($val->proc_approval == 0 && $val->order_recieved == 0)
@@ -92,6 +94,7 @@
                                     <th>Description</th>
                                     <th>Model No</th>
                                     <th>Brand Name</th>
+                                    <th>Location</th>
                                     <th>Requested Qty</th>
                                     <th>Status</th>
                                 </tr>

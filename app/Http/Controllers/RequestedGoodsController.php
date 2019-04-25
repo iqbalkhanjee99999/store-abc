@@ -56,6 +56,8 @@ class RequestedGoodsController extends Controller
         $data['requested_qty']      = $request->requested_qty;
         $data['project_id']         = Session::get('project_id');
         $data['items']              = $request->items;
+        $data['location']           = $request->location;
+
 
         $requestedGoods = new RequestedGoods();
         $requestedGoods->addRequestedGoods($data);
@@ -294,7 +296,7 @@ class RequestedGoodsController extends Controller
 
         $request->session()->put('project_name', $data->project_name);
         $request->session()->put('project_id', $data->id);
-        return view('requestedGoods/addRequest')->with('categories',$categories);
+        return view('projects.requestProjectMaterials')->with('categories',$categories);
     }
 
     public function returnedItems($id = 0){
@@ -307,6 +309,17 @@ class RequestedGoodsController extends Controller
         $data   = $goods->getAllReturnedGoods();
 
         return view('projects.returnedItems')->with('data',$data);
+    }
+    public function getStoreReturnedItems($id = 0){
+
+        if($id > 0){
+            $noti = new Notifications();
+            $noti->changeStatusToRead($id);
+        }
+        $goods  = new RequestedGoods();
+        $data   = $goods->getStoreReturnedItems();
+
+        return view('projects.getStoreReturnedItems')->with('data',$data);
     }
 
     public function returnedToStore(Request $request){

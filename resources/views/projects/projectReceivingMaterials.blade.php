@@ -18,7 +18,9 @@
                                     <h2>{{Session::get('project_name')}}</h2>
                                 </div>
                             </div>
+
                         </div>
+
                         @if(session('success'))
                             <div class="col-md-6 pull-right">
                                 <div class="alert alert-success alert-dismissible">
@@ -27,9 +29,17 @@
                                 </div>
                             </div>
                         @endif
+                        @if(session('error'))
+                            <div class="col-md-6 pull-right">
+                                <div class="alert alert-danger alert-dismissible">
+                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                    <strong>Error!</strong> {{session('error')}}
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
-                <form action="{{asset('/projects/projectAddRecivingMaterialsData')}}" method="post" id="projectRecivingForm">
+                <form action="{{asset('/projects/projectAddRecivingMaterialsData')}}" method="post" id="projectRecivingForm" enctype="multipart/form-data">
                     {{csrf_field()}}
                     <input type="hidden" name="project_id" value="{{Session::get('project_id')}}">
                     <div class="row">
@@ -106,6 +116,17 @@
                                                     <div class="col-lg-8 col-md-7 col-sm-7 col-xs-12">
                                                         <div class="nk-int-st">
                                                             <input type="text" id="reciving_from" name="reciving_from" class="form-control input-md" placeholder="Reciving Form" required>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
+                                                        <label class="hrzn-fm "><strong>Add File</strong></label>
+                                                    </div>
+                                                    <div class="col-lg-8 col-md-7 col-sm-7 col-xs-12">
+                                                        <div class="nk-int-st">
+                                                            <input type="file" id="file" name="file" class="form-control input-md" placeholder="Reciving Form" required>
                                                         </div>
                                                     </div>
                                                 </div>

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -102,10 +103,12 @@ class Project extends Model
     }
 
     public function ProjectAddRecivingMaterialsData($data){
+
         $id = DB::table('project_reciving_form')
             ->insertGetId([
                 'reciving_from' => $data['reciving_from'],
                 'project_id'    => $data['project_id'],
+                'file'          => $data['file'],
                 'date'          => date('Y-m-d')
             ]);
 
@@ -123,6 +126,9 @@ class Project extends Model
                 DB::table('project_items')
                     ->where('id', $q->id)
                     ->increment('quantity_2' , $data['requested_qty'][$k]);
+                DB::table('project_items')
+                    ->where('id', $q->id)
+                    ->update(['location' => $data['location'][$k],'updated_at' => $data['updated_at']]);
             }else{
                 DB::table('project_items')
                     ->insert([
@@ -131,6 +137,9 @@ class Project extends Model
                         'item_id'       => $data['items'][$k],
                         'quantity'      => $data['requested_qty'][$k],
                         'quantity_2'    => $data['requested_qty'][$k],
+                        'location'      => $data['location'][$k],
+                        'created_at'    => $data['created_at'],
+                        'updated_at'    => $data['updated_at'],
                     ]);
             }
 
@@ -141,7 +150,6 @@ class Project extends Model
                     'category_id'   => $data['categories'][$k],
                     'item_id'       => $data['items'][$k],
                     'required_qty'  => $data['requested_qty'][$k],
-                    'location'      => $data['location'][$k],
                 ]);
         }
     }
@@ -173,9 +181,11 @@ class Project extends Model
                 'project_items.id as project_item_id',
                 'project_items.is_idle',
                 'project_items.project_id',
+                'project_items.location',
                 'category_items.photo'
             );
             $q->where('project_items.project_id',$project_id);
+            $q->where('project_items.under_store_approval',0);
             $data = $q->get();
         return $data;
     }
@@ -200,6 +210,7 @@ class Project extends Model
                 'project_items.id as project_item_id',
                 'project_items.is_idle',
                 'project_items.project_id',
+                'project_items.location',
                 'category_items.photo'
             );
             $q->orderBy('project_name');
@@ -214,7 +225,9 @@ class Project extends Model
             ->where('project_items.project_id',$project_id)
             ->select('project_items.quantity as total_qty',
                 'project_items.item_id',
-                'category_items.description','category_items.brand_name',
+                'category_items.description',
+                'category_items.brand_name',
+                'category_items.quantity_unit',
                 'category_items.model_no'
                 )
             ->first();
@@ -247,7 +260,15 @@ class Project extends Model
         return $data;
     }
 
-    public function approveProjectMaterialStoreKeeper($id,$project_id){
+    /**
+     * @param $id
+     * @param $project_id
+     * @return mixed
+     */
+    public function approveProjectMaterialStoreKeeper($id, $project_id){
+
+        $current_date_time = Carbon::now()->toDateTimeString();
+
         DB::table('project_request_materials')
             ->where('id',$id)
             ->update([
@@ -270,6 +291,11 @@ class Project extends Model
             ->where('project_id',$project_id)
             ->where('item_id',$item_id)
             ->decrement('quantity_2',$quantity);
+
+        DB::table('project_items')
+            ->where('project_id',$project_id)
+            ->where('item_id',$item_id)
+            ->update(['updated_at'=> $current_date_time]);
 
         return $project_id;
     }
@@ -310,14 +336,17 @@ class Project extends Model
     }
 
     public function markStoreItemAsFunctional($id){
+        $current_date_time = Carbon::now()->toDateTimeString();
         DB::table('project_items')
             ->where('id',$id)
             ->update([
-                'is_idle' => 0
+                'is_idle' => 0,
+                'updated_at' => $current_date_time,
             ]);
     }
 
     public function markStoreItemAsIdle($id){
+        $current_date_time = Carbon::now()->toDateTimeString();
         $data = DB::table('project_items')
                 ->where('id',$id)
                 ->first();
@@ -327,12 +356,13 @@ class Project extends Model
             DB::table('project_items')
                 ->where('id',$id)
                 ->update([
-                    'is_idle' => 1
+                    'is_idle' => 1,
+                    'updated_at' => $current_date_time,
                 ]);
         }
     }
 
-    public function returnItemToMainStore($id){
+    public function returnItemToMainStore($id,$reason){
         $q = DB::table('project_items')
                 ->where('id',$id)
                 ->first();
@@ -349,13 +379,53 @@ class Project extends Model
                     'item_id' => $item_id,
                     'quantity' => $quantity,
                     'project_id' => $project_id,
+                    'engineer_id' => Auth::user()->id,
                     'engineer_name' => Auth::user()->name,
+                    'reason' =>$reason,
                 ]);
 
             DB::table('project_items')
                 ->where('id',$id)
-                ->delete();
+                ->update(['under_store_approval' => 1]);
+
+            return $project_id;
         }
+    }
+
+    public function storeApproveReturnedItems($data){
+
+        DB::table('returned_items')
+            ->where('id',$data['row_id'])
+            ->update([
+                'store_approve' => 1,
+            ]);
+
+        DB::table('project_items')
+            ->where('project_id',$data['project_id'])
+            ->where('item_id',$data['item_id'])
+            ->delete();
+
+    }
+
+    public function storeRejectReturnedItems($data){
+
+
+
+        DB::table('returned_items')
+            ->where('id',$data['row_id'])
+            ->update([
+                'store_approve' => 2,
+            ]);
+
+        DB::table('project_items')
+            ->where('project_id',$data['project_id'])
+            ->where('item_id',$data['item_id'])
+            ->update(['under_store_approval' => 0]);
+
+        $data = DB::table('returned_items')
+            ->select('project_id','engineer_id')
+            ->where('id',$data['row_id'])->first();
+        return $data;
     }
 
     public function getIdleItems(){
@@ -417,13 +487,18 @@ class Project extends Model
             ->join('categories','project_idle_items_request.category_id','=','categories.id')
             ->join('projects as a','project_idle_items_request.project_id','=','a.id')
             ->join('projects as b','project_idle_items_request.requested_project_id','=','b.id')
+             ->leftJoin('project_items', function($join){
+                 $join->on('project_items.project_id', '=', 'project_idle_items_request.project_id');
+                 $join->on('project_items.item_id', '=', 'project_idle_items_request.item_id');
+             })
             ->select('project_idle_items_request.quantity as total_qty',
                 'category_items.description','category_items.brand_name',
                 'category_items.model_no',
                 'categories.title as category_name',
                 'b.project_name as requested_project_name',
                 'project_idle_items_request.id as row_id',
-                'project_idle_items_request.project_item_id'
+                'project_idle_items_request.project_item_id',
+                'project_items.location'
             )
             ->where('storekeeper_id',Auth::user()->id)
             ->where('project_idle_items_request.project_id',Session::get('project_id'))

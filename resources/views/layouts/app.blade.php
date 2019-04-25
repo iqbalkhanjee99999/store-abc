@@ -1,21 +1,40 @@
     <main class="py-4">
         <script src="{{asset('jquery-3.3.1.min.js')}}"></script>
         @yield('content')
-        <script>
-            if(localStorage.getItem('sub_store') == 1){
-                $('#Home').removeClass('active');
-                $('#mailbox').addClass('active');
-            }else{
-                $('#mailbox').removeClass('active');
-                $('#Home').addClass('active');
-            }
-            $('#mailbox ul li ').click(function () {
-                 localStorage.setItem('sub_store',1);
-             });
-            $('#Home ul li ').click(function () {
-                localStorage.setItem('sub_store',0);
-             });
-        </script>
+        @if(Auth::user()->user_type == 1 || Auth::user()->user_type == 3)
+            <script>
+                if(localStorage.getItem('sub_store') == 1){
+                    $('#Home').addClass('active');
+                    $('#mailbox').removeClass('active');
+                }else{
+                    $('#Home').removeClass('active');
+                    $('#mailbox').addClass('active');
+                }
+                $('#mailbox ul li ').click(function () {
+                    localStorage.setItem('sub_store',0);
+                });
+                $('#Home ul li ').click(function () {
+                    localStorage.setItem('sub_store',1);
+                });
+            </script>
+        @else
+            <script>
+                if(localStorage.getItem('sub_store') == 1){
+                    $('#Home').removeClass('active');
+                    $('#mailbox').addClass('active');
+                }else{
+                    $('#mailbox').removeClass('active');
+                    $('#Home').addClass('active');
+                }
+                $('#mailbox ul li ').click(function () {
+                    localStorage.setItem('sub_store',1);
+                });
+                $('#Home ul li ').click(function () {
+                    localStorage.setItem('sub_store',0);
+                });
+            </script>
+        @endif
+
     </main>
 
     <script src="{{asset('temp_js/vendor/jquery-1.12.4.min.js')}}"></script>

@@ -52,6 +52,7 @@
                                                         <th>Brand Name</th>
                                                         <th>Avalible Quantity</th>
                                                         <th>Requested Qty</th>
+                                                        <th>Location</th>
                                                         <th>Actions</th>
                                                     </tr>
                                                     <tr>
@@ -79,6 +80,9 @@
                                                         </td>
                                                         <td>
                                                             <input type="number" class="requested_qty form-control" style="width: 100px;" name="requested_qty[]" disabled required>
+                                                        </td>
+                                                        <td>
+                                                            <input type="location" class="location form-control" name="location[]" disabled required>
                                                         </td>
                                                         <td></td>
                                                     </tr>
@@ -125,6 +129,9 @@
                                 </td>
                                 <td>
                                     <input type="number" class="requested_qty form-control" style="width: 100px;" name="requested_qty[]" disabled required>
+                                </td>
+                                <td>
+                                    <input type="location" class="location form-control" name="location[]" disabled required>
                                 </td>
                                 <td>
                                     <a onclick="remove_row(this)" title="Remove Coloumn" class="btn-danger notika-btn-danger btn waves-effect"><i class="notika-icon notika-trash"></i></a>

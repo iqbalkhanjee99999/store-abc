@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Notifications;
 use App\Project;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Category;
 use Illuminate\View\View;
@@ -130,12 +131,35 @@ class ProjectsController extends Controller
 
     public function projectAddRecivingMaterialsData(Request $request){
 
+        if ($request->hasFile('file')) {
+            $fileNameWithExtension  = $request->file('file')->getClientOriginalName();
+            $fileName               = pathinfo($fileNameWithExtension, PATHINFO_FILENAME);
+            $fileExtension          = strtolower($request->file('file')->getClientOriginalExtension());
+
+            if ($fileExtension == 'pdf' || $fileExtension == 'docx' || $fileExtension == 'xlsx' || $fileExtension == 'xls') {
+                $fileNameToStore    = $fileName . '_' . time() . '.' . $fileExtension;
+
+                $path   =   base_path() . '/attachments/files/';
+                if(!is_dir ( $path))
+                    $path   =   base_path() . '/attachments/files/';
+
+                $request->file('file')->move($path,$fileNameToStore);
+                $data['file'] = $fileNameToStore;
+            } else {
+                return redirect()->back()->with('error','incorrect file format');
+            }
+        }
+
+        $current_date_time = Carbon::now()->toDateTimeString();
+
         $data['project_id']     = $request->project_id;
         $data['categories']     = $request->categories;
         $data['items']          = $request->items;
         $data['requested_qty']  = $request->quantity;
         $data['location']       = $request->location;
         $data['reciving_from']  = $request->reciving_from;
+        $data['created_at']  = $current_date_time;
+        $data['updated_at']  = $current_date_time;
 
         $project = new Project();
         $project->ProjectAddRecivingMaterialsData($data);
@@ -185,8 +209,8 @@ class ProjectsController extends Controller
         $data['requested_qty']      = $request->requested_qty;
         $data['project_id']         = Session::get('project_id');
         $data['items']              = $request->items;
+        $data['issued_to']          = $request->issued_to;
         $project_name = Session::get('project_name');
-
 
         $requestedGoods = new RequestedGoods();
         $user_id        = $requestedGoods->getStoreKeeper($id);
@@ -294,21 +318,25 @@ class ProjectsController extends Controller
         $data       = $project->markStoreItemAsFunctional($id);
         die($data);
     }
-    public function returnItemToMainStore($id){
+    public function returnItemToMainStore(Request $request){
 
+        $id     = $request->id;
+        $reason = $request->reason;
         $project    = new Project();
-        $data       = $project->returnItemToMainStore($id);
+        $project_id       = $project->returnItemToMainStore($id,$reason);
 
-        if($data != ''){
-            die($data);
-        }else{
-            $noti['title']          = 'Items Returned';
-            $noti['description']    = 'Items Returned To Store . Please Take Further Actions';
-            $noti['link']           = '/returnedItems';
+        $requestedGoods = new RequestedGoods();
+        $user_id        = $requestedGoods->getStoreKeeperId($project_id);
 
-            $notification = new Notifications();
-            $notification->storeManagerSendNotification($noti);
-        }
+        $noti['title']          = 'Items Return Requested';
+        $noti['description']    = 'Items Return Requested For '. Session::get('project_name');
+        $noti['link']           = '/storeReturnedItems';
+        $noti['user_id']        = $user_id;
+        $noti['project_id']     = $project_id;
+
+        $notification = new Notifications();
+        $notification->storeKeeperNotification($noti);
+
     }
 
     public function idleItems(){
@@ -408,5 +436,41 @@ class ProjectsController extends Controller
 
         $notification = new Notifications();
         $notification->engineerSendNotification($noti);
+    }
+
+    public function storeApproveReturnedItems(Request $request){
+        $data['row_id'] = $request->row_id;
+        $data['project_id'] = $request->project_id;
+        $data['item_id'] = $request->item_id;
+
+        $project = new Project();
+        $project->storeApproveReturnedItems($data);
+
+        $noti['title']          = 'Items Returned';
+        $noti['description']    = 'Items Returned To Store . Please Take Further Actions';
+        $noti['link']           = '/returnedItems';
+
+        $notification = new Notifications();
+        $notification->storeManagerSendNotification($noti);
+
+    }
+
+    public function storeRejectReturnedItems(Request $request){
+        $data['row_id'] = $request->row_id;
+        $data['project_id'] = $request->project_id;
+        $data['item_id'] = $request->item_id;
+
+        $project = new Project();
+        $project_data = $project->storeRejectReturnedItems($data);
+
+        $noti['title']          = 'Request Rejected';
+        $noti['description']    = 'Items Returned Request Rejected By StoreKeeper';
+        $noti['link']           = '/reports/projectInventoryList/'.$project_data->project_id;
+        $noti['user_id']        = $project_data->engineer_id;
+        $noti['project_id']     = $project_data->project_id;
+
+        $notification = new Notifications();
+        $notification->engineerSendNotification($noti);
+
     }
 }

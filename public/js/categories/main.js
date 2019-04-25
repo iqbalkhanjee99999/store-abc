@@ -261,6 +261,50 @@ function rejectIdleItemsRequest(row_id) {
     });
 }
 
+function storeReturnApprove(row_id,project_id,item_id) {
+
+    var basepath    =   window.location.origin;
+
+    swal({
+        title: 'Warning!!',
+        text: "Item will be returned to Main store",
+        type: "warning",
+        confirmButtonText: "Return",
+        showCancelButton: true,
+    }).then(function () {
+        $.ajax({
+            type:"GET",
+            data:{row_id:row_id,project_id:project_id,item_id:item_id},
+            url: basepath+'/projects/storeApproveReturnedItems',
+            success: function(data) {
+                location.reload();
+            }
+        });
+    });
+}
+
+function storeReturnReject(row_id,project_id,item_id) {
+
+    var basepath    =   window.location.origin;
+
+    swal({
+        title: 'Warning!!',
+        text: "Return items request will be rejected",
+        type: "warning",
+        confirmButtonText: "Reject",
+        showCancelButton: true,
+    }).then(function () {
+        $.ajax({
+            type:"GET",
+            data:{row_id:row_id,project_id:project_id,item_id:item_id},
+            url: basepath+'/projects/storeRejectReturnedItems',
+            success: function(data) {
+                location.reload();
+            }
+        });
+    });
+}
+
 function enable_item_location(id) {
     $('#zone_no'+id).prop('disabled',false);
     $('#column_no'+id).prop('disabled',false);

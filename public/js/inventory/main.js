@@ -93,6 +93,8 @@ function exportProjectMaterialsToExcel() {
 }
 
 function returnItem(id) {
+    var reason = $('#reason'+id).val();
+    debugger;
     var basepath   =   window.location.origin;
     swal({
         title: 'Item Will Be Returned To Main Store!',
@@ -104,7 +106,9 @@ function returnItem(id) {
         $.ajax({
             type:"GET",
             url: basepath+'/projects/returnItemToMainStore/'+id,
+            data:{reason:reason},
             success: function(data) {
+                debugger;
                 if(data != ''){
                     swal({
                         title: 'Error !',

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Notifications;
 use App\Reports;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -302,8 +303,12 @@ class ReportsController extends Controller
     }
 
 
-    public function projectInventoryList(Request $request){
+    public function projectInventoryList(Request $request ,$noti_id = 0){
 
+        if($noti_id > 0){
+            $noti = new Notifications();
+            $noti->changeStatusToRead($noti_id);
+        }
         $search = array();
         $search['category']      = $request->category;
         $search['search']        = $request->search;

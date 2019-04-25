@@ -125,7 +125,9 @@ function getItems(item) {
     brand_name       =  $(row).find('.brand_name');
     avalible_qty       =  $(row).find('.avalible_qty');
     requested_qty = $(row).find('.requested_qty');
+    loc = $(row).find('.location');
     requested_qty.prop("disabled", false);
+    loc.prop("disabled", false);
 
     debugger;
 

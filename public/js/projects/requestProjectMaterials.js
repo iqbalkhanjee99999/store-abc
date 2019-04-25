@@ -65,7 +65,10 @@ function getProjectItemDetails(item) {
     brand_name = $(row).find('.brand_name');
     avalible_qty = $(row).find('.avalible_qty');
     requested_qty = $(row).find('.requested_qty');
+    unit = $(row).find('.unit');
+    issued_to = $(row).find('.issued_to');
     requested_qty.prop("disabled", false);
+    issued_to.prop("disabled", false);
 
     debugger;
 
@@ -86,11 +89,13 @@ function getProjectItemDetails(item) {
                 if (obj.brand_name != '')
                     brand_name.text(obj.brand_name);
                 avalible_qty.text(obj.total_qty);
+                unit.text(obj.quantity_unit);
             }
             else {
                 model_no.text('Model No');
                 brand_name.text('Zone No');
                 avalible_qty.text('Avalible Qty');
+                unit.text('unit');
             }
 
         }
@@ -98,7 +103,6 @@ function getProjectItemDetails(item) {
 }
 
 function validateProjectMaterialsRequest() {
-
     event.preventDefault();
     var avalible_qty = new Array('');
     var title = '';
@@ -106,14 +110,18 @@ function validateProjectMaterialsRequest() {
     var numItems = $('.items').length;
     var project_name = $('#project_name').val();
 
-    if(project_name == ''){
-        error = 1;
-        title = 'Please Enter Project Name';
-    }
-
     $('.avalible_qty').each(function (index) {
         if(index != numItems - 1){
             avalible_qty[index] = parseInt($(this).text());
+        }
+    })
+
+    $('.issued_to').each(function (index) {
+        if(index != numItems - 1){
+            if($(this).val() == ''){
+                error = 1;
+                title = 'Please fill Issued to textbox';
+            }
         }
     })
 

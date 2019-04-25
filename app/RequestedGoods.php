@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Session;
 class RequestedGoods extends Model
 {
     public function addRequestedGoods($data){
+
         foreach($data['items'] as $k => $val){
             $category =  DB::table('category_items')
                 ->where('id',$data['items'][$k])
@@ -24,6 +26,7 @@ class RequestedGoods extends Model
                     'requested_qty' => $data['requested_qty'][$k],
                     'project_id'    => $data['project_id'],
                     'date'          => date('Y-m-d'),
+                    'location'      => $data['location'][$k]
                 ]);
 
             DB::table('category_items')
@@ -33,6 +36,8 @@ class RequestedGoods extends Model
     }
 
     public function addRequestedProjectMaterials($data){
+        $current_date_time = Carbon::now()->toDateTimeString();
+
         foreach($data['items'] as $k => $val){
             $category =  DB::table('category_items')
                 ->where('id',$data['items'][$k])
@@ -47,12 +52,14 @@ class RequestedGoods extends Model
                     'requested_qty' => $data['requested_qty'][$k],
                     'project_id'    => $data['project_id'],
                     'date'          => date('Y-m-d'),
+                    'issued_to'     => $data['issued_to'][$k],
                 ]);
 
             DB::table('project_items')
                 ->where('project_id',$data['project_id'])
                 ->where('item_id',$data['items'][$k])
                 ->decrement('quantity',$data['requested_qty'][$k]);
+
         }
 
     }
@@ -222,11 +229,13 @@ class RequestedGoods extends Model
             ->select(
                 'request_goods.id as requested_goods_id',
                 'request_goods.*',
+                'request_goods.*',
                 'categories.*',
                 'category_items.*',
                 'users.name'
             )
             ->get();
+
         return $data;
     }
 
@@ -379,11 +388,13 @@ class RequestedGoods extends Model
             ->where('id',$id)
             ->first();
 
+        $current_date_time = Carbon::now()->toDateTimeString();
+
         $data['category_id']    = $q2->category_id;
         $data['form_id']        = 0;
         $data['item_id']        = $q2->item_id;
         $data['requested_qty']  = $q2->requested_qty;
-        $data['location']       = 'Orderd From Main Store';
+        $data['location']       = $q2->location;
 
         $q = DB::table('project_items')
             ->where('project_id', Session::get('project_id'))
@@ -398,6 +409,9 @@ class RequestedGoods extends Model
             DB::table('project_items')
                 ->where('id',$row_id)
                 ->increment('quantity_2' , $data['requested_qty']);
+            DB::table('project_items')
+                ->where('id',$row_id)
+                ->update(['location' => $data['location'],'updated_at' => $current_date_time]);
         }else{
             DB::table('project_items')
                 ->insert([
@@ -406,6 +420,9 @@ class RequestedGoods extends Model
                     'item_id'       => $data['item_id'],
                     'quantity'      => $data['requested_qty'],
                     'quantity_2'    => $data['requested_qty'],
+                    'location'      => $data['location'],
+                    'created_at'    =>$current_date_time,
+                    'updated_at'    =>$current_date_time,
                 ]);
         }
 
@@ -416,7 +433,6 @@ class RequestedGoods extends Model
                 'category_id'   => $data['category_id'],
                 'item_id'       => $data['item_id'],
                 'required_qty'  => $data['requested_qty'],
-                'location'      => $data['location'],
             ]);
     }
 
@@ -435,11 +451,36 @@ class RequestedGoods extends Model
                 'category_items.brand_name',
                 'returned_items.quantity',
                 'returned_items.engineer_name',
+                'returned_items.reason',
                 'returned_items.item_id',
                 'projects.project_name',
                 'returned_items.id'
             )
             ->where('returned_items.is_returned',0)
+            ->where('returned_items.store_approve',1)
+            ->get();
+        return $data;
+    }
+
+    public function getStoreReturnedItems(){
+        $data = DB::table('returned_items')
+            ->join('projects','returned_items.project_id','projects.id')
+            ->join('category_items','returned_items.item_id','category_items.id')
+            ->join('categories','category_items.category_id','categories.id')
+            ->select(
+                'categories.description as category_name',
+                'category_items.description as item_name',
+                'category_items.brand_name',
+                'returned_items.quantity',
+                'returned_items.reason',
+                'returned_items.project_id',
+                'returned_items.engineer_name',
+                'returned_items.item_id',
+                'projects.project_name',
+                'returned_items.id'
+            )
+            ->where('returned_items.is_returned',0)
+            ->where('returned_items.store_approve',0)
             ->get();
         return $data;
     }

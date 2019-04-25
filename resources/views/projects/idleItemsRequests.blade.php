@@ -48,6 +48,7 @@
                                     <th>Category</th>
                                     <th>Item</th>
                                     <th>Brand Name</th>
+                                    <th>Location</th>
                                     <th>Requested Quantity</th>
                                     <th>Project</th>
                                     <th>Action</th>
@@ -60,6 +61,7 @@
                                         <td>{{$val->category_name}}</td>
                                         <td>{{$val->description}}</td>
                                         <td>{{$val->brand_name}}</td>
+                                        <td>{{$val->location}}</td>
                                         <td >{{$val->total_qty}}</td>
                                         <td>{{$val->requested_project_name}}</td>
                                         <td>
@@ -75,6 +77,7 @@
                                     <th>Category</th>
                                     <th>Item</th>
                                     <th>Brand Name</th>
+                                    <th>Location</th>
                                     <th>Requested Quantity</th>
                                     <th>Project</th>
                                     <th>Action</th>

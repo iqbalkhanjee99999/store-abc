@@ -79,6 +79,7 @@
                                     <th>Item</th>
                                     <th>Brand</th>
                                     <th>Model No</th>
+                                    <th>Location</th>
                                     <th>Quantity</th>
                                     <th>Photo</th>
                                     <th>Status</th>
@@ -92,6 +93,7 @@
                                         <td>{{$val->item_name}}</td>
                                         <td>{{$val->brand_name}}</td>
                                         <td>{{$val->model_no}}</td>
+                                        <td>{{$val->location}}</td>
                                         <td style="color:indianred;font-weight: bold;">{{$val->total_qty}}</td>
                                         <td><a  href="{{asset('attachments/items_images/'.$val->photo)}}"><i class="fa fa-image"></i></a></td>
                                         <td>
@@ -114,6 +116,7 @@
                                     <th>Item</th>
                                     <th>Brand</th>
                                     <th>Model No</th>
+                                    <th>Location</th>
                                     <th>Quantity</th>
                                     <th>Photo</th>
                                     <th>Status</th>

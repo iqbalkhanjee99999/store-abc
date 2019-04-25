@@ -50,6 +50,7 @@
                                     <th>Item</th>
                                     <th>Brand Name</th>
                                     <th>Quantity</th>
+                                    <th>Reason</th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
@@ -63,6 +64,7 @@
                                         <td>{{$val->item_name}}</td>
                                         <td>{{$val->brand_name}}</td>
                                         <td>{{$val->quantity}}</td>
+                                        <td>{{$val->reason}}</td>
                                         <td>
                                             <button type="button" class="btn btn-success notika-btn-success" data-toggle="modal" data-target="#myModal{{$val->id}}" >Recevied</button>
                                         </td>
@@ -121,6 +123,7 @@
                                     <th>Item</th>
                                     <th>Brand Name</th>
                                     <th>Quantity</th>
+                                    <th>Reason</th>
                                     <th>Action</th>
                                 </tr>
                                 </tfoot>

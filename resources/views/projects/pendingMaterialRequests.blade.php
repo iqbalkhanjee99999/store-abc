@@ -48,13 +48,11 @@
                                     <th>Description</th>
                                     <th>Model No</th>
                                     <th>Brand Name</th>
-                                    <th>Zone No</th>
-                                    <th>Column No</th>
-                                    <th>Shelf No</th>
-                                    <th>Carton No</th>
+                                    {{--<th>location</th>--}}
                                     <th>Picture</th>
-                                    <th>User Name</th>
+                                    <th>Engineer Name</th>
                                     <th>Project Name</th>
+                                    <th>Issued To</th>
                                     <th>Avalible Qty</th>
                                     <th>Requested Qty</th>
                                     <th>Actions</th>
@@ -67,17 +65,15 @@
                                         <td>{{$val->description}}</td>
                                         <td>{{$val->model_no}}</td>
                                         <td>{{$val->brand_name}}</td>
-                                        <td>{{$val->zone_no}}</td>
-                                        <td>{{$val->column_no}}</td>
-                                        <td>{{$val->shelf_no}}</td>
-                                        <td>{{$val->carton_no}}</td>
+                                        {{--<td>{{$val->location}}</td>--}}
                                         <td><a href="{{asset('attachments/items_images/'.$val->photo)}}"><i class="fa fa-image"></i></a></td>
                                         <td>{{$val->name}}</td>
                                         <td>{{$val->project_name}}</td>
+                                        <td>{{$val->issued_to}}</td>
                                         <td>{{$val->quantity_2}}</td>
                                         <td>{{$val->requested_qty}}</td>
                                         <td>
-                                            <a href="{{asset('projects/storeKeeperApprove/'.$val->requested_goods_id)}}"  class="btn btn-success notika-btn-success">{{Auth::user()->user_type == 1001 ? 'Store ' : 'Approve '}}<i class="fa fa-check"></i></a>
+                                            <a href="{{asset('projects/storeKeeperApprove/'.$val->requested_goods_id)}}"  class="btn btn-success notika-btn-success col-sm-12">{{Auth::user()->user_type == 1001 ? 'Store ' : 'Approve '}}<i class="fa fa-check"></i></a>
                                             <a href="{{asset('projects/storeKeeperReject/'.$val->requested_goods_id)}}"  class="btn btn-danger notika-btn-danger col-md-12" style="margin-top: 5px;">{{Auth::user()->user_type == 1001 ? 'Store ' : 'Reject '}}<i class="fa fa-times"></i></a>
                                         </td>
                                     </tr>
@@ -89,13 +85,11 @@
                                     <th>Description</th>
                                     <th>Model No</th>
                                     <th>Brand Name</th>
-                                    <th>Zone No</th>
-                                    <th>Column No</th>
-                                    <th>Shelf No</th>
-                                    <th>Carton No</th>
+                                    {{--<th>location</th>--}}
                                     <th>Picture</th>
                                     <th>User Name</th>
                                     <th>Project Name</th>
+                                    <th>Issued To</th>
                                     <th>Avalible Qty</th>
                                     <th>Requested Qty</th>
                                     <th>Actions</th>

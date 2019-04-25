@@ -75,6 +75,7 @@ Route::get('requestedGoods/markMaterialAsRecieved/{id}', 'RequestedGoodsControll
 Route::get('requestedGoods/selectedProject', 'RequestedGoodsController@selectedProject');
 Route::get('requestedGoods/returnedToStore/{id}', 'RequestedGoodsController@returnedToStore');
 Route::get('/returnedItems/{id?}', 'RequestedGoodsController@returnedItems');
+Route::get('/storeReturnedItems/{id?}', 'RequestedGoodsController@getStoreReturnedItems');
 
 /////////////////////Reports////////////////////////////////////
 
@@ -89,7 +90,7 @@ Route::get('reports/exportProjectMaterialsToExcel', 'ReportsController@exportPro
 Route::get('reports/exportToExcelRecieved', 'ReportsController@exportToExcelRecieved');
 Route::get('reports/toolsInventoryList', 'ReportsController@toolsInventoryList');
 Route::get('reports/exportToolsToExcel', 'ReportsController@exportToolsToExcel');
-Route::get('reports/projectInventoryList/{id}', 'ReportsController@projectInventoryList');
+Route::get('reports/projectInventoryList/{id}/{noti_id?}', 'ReportsController@projectInventoryList');
 Route::get('reports/allProjectsInventory/{id?}', 'ReportsController@allProjectsInventory');
 
 //////////////////Notificaitons////////////////////////////////
@@ -129,3 +130,5 @@ Route::get('projects/approveRequestIdleItems', 'ProjectsController@approveReques
 Route::get('projects/rejectIdleItemsRequest', 'ProjectsController@rejectIdleItemsRequest');
 Route::get('projects/myIdleItemsRequest/{id?}', 'ProjectsController@myIdleItemsRequest');
 Route::get('projects/idleItemsRecevied', 'ProjectsController@idleItemsRecevied');
+Route::get('projects/storeApproveReturnedItems', 'ProjectsController@storeApproveReturnedItems');
+Route::get('projects/storeRejectReturnedItems', 'ProjectsController@storeRejectReturnedItems');
