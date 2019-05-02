@@ -150,6 +150,7 @@ class Project extends Model
                     'category_id'   => $data['categories'][$k],
                     'item_id'       => $data['items'][$k],
                     'required_qty'  => $data['requested_qty'][$k],
+                    'location'  => $data['location'][$k],
                 ]);
         }
     }
@@ -608,6 +609,14 @@ class Project extends Model
                 ]);
         }
 
+    }
+
+    public function getFileName($id){
+        $data = DB::table('project_reciving_form')
+            ->select('file')
+            ->where('id',$id)
+            ->first();
+        return $data->file;
     }
 
 }

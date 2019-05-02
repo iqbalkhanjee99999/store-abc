@@ -49,6 +49,24 @@ class Reports extends Model
         return $data;
     }
 
+    public function projectRecivingItemsReports($id){
+       $data =  DB::table('project_reciving_form')
+           ->join('projects_receiving_materials_2','projects_receiving_materials_2.form_id','=','project_reciving_form.id')
+            ->join('category_items','projects_receiving_materials_2.item_id','=','category_items.id')
+            ->join('categories','category_items.category_id','=','categories.id')
+           ->where('projects_receiving_materials_2.form_id',$id)
+           ->select(
+               'project_reciving_form.*',
+               'category_items.*',
+               'categories.title',
+               'projects_receiving_materials_2.required_qty as total_quantity',
+               'projects_receiving_materials_2.location',
+               'category_items.quantity_unit'
+           )
+            ->get();
+       return $data;
+    }
+
     public function recivingItemsReports($id){
        $data =  DB::table('form_items')
            ->join('reciving_goods','form_items.form_id','=','reciving_goods.id')
@@ -120,6 +138,13 @@ class Reports extends Model
 
     public function recivingItems(){
         $data = DB::table('reciving_goods')
+            ->get();
+        return $data;
+    }
+
+    public function projectReceivingItems($project_id){
+        $data = DB::table('project_reciving_form')
+            ->where('project_id',$project_id)
             ->get();
         return $data;
     }

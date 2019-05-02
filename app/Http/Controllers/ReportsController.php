@@ -9,7 +9,11 @@ use Illuminate\Http\Request;
 use App\Category;
 use Excel;
 use App\Project;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
+use Matrix\Exception;
+use function Sodium\compare;
+
 class ReportsController extends Controller
 {
     public function __construct()
@@ -51,6 +55,14 @@ class ReportsController extends Controller
         }
     }
 
+    public function projectReceivingItems($id){
+
+        $reports    = new Reports();
+        $data       = $reports->projectReceivingItems($id);
+
+        return view('reports/projectReceivingItems',compact('data'));
+    }
+
     public function recivingItemsReports($id){
 
         $reports = new Reports();
@@ -62,6 +74,13 @@ class ReportsController extends Controller
         else{
             return redirect('/home');
         }
+    }
+
+    public function projectRecivingItemsReports($id){
+
+        $reports = new Reports();
+        $data = $reports->projectRecivingItemsReports($id);
+        return view('reports.projectRecivingItemsReports')->with('data',$data);
     }
 
     public function inventoryList(Request $request){
@@ -382,6 +401,22 @@ class ReportsController extends Controller
             'file' => "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,".base64_encode($myFile)
         );
         return response()->json($response);
+    }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function downloadFile($id){
+
+        $data = new Project();
+        $file_name = $data->getFileName($id);
+        $file= public_path(). "/attachments/files/".$file_name;
+        if(file_exists($file)){
+            return response()->download($file);
+        }else{
+            return redirect()->back()->with('error','No file found for this order');
+        }
     }
 
 

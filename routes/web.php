@@ -84,6 +84,8 @@ Route::get('reports/requestedToolsReports', 'ReportsController@requestedToolsRep
 Route::get('reports/recivingItemsReports/{id}', 'ReportsController@recivingItemsReports');
 Route::get('reports/inventoryList', 'ReportsController@inventoryList');
 Route::get('reports/recivingItems', 'ReportsController@recivingItems');
+Route::get('reports/projectReceivingItems/{id}', 'ReportsController@projectReceivingItems');
+Route::get('reports/projectRecivingItemsReports/{id}', 'ReportsController@projectRecivingItemsReports');
 Route::get('reports/exportToExcel', 'ReportsController@exportToExcel');
 Route::get('reports/exportToExcelRequested', 'ReportsController@exportToExcelRequested');
 Route::get('reports/exportProjectMaterialsToExcel', 'ReportsController@exportProjectMaterialsToExcel');
@@ -92,6 +94,7 @@ Route::get('reports/toolsInventoryList', 'ReportsController@toolsInventoryList')
 Route::get('reports/exportToolsToExcel', 'ReportsController@exportToolsToExcel');
 Route::get('reports/projectInventoryList/{id}/{noti_id?}', 'ReportsController@projectInventoryList');
 Route::get('reports/allProjectsInventory/{id?}', 'ReportsController@allProjectsInventory');
+Route::get('reports/downloadFile/{id}', 'ReportsController@downloadFile');
 
 //////////////////Notificaitons////////////////////////////////
 

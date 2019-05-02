@@ -47,7 +47,7 @@
                             <div class="form-example-wrap mg-t-30">
                                 <div class="form-example-int form-horizental">
                                     <div class="cmp-tb-hd cmp-int-hd">
-                                        <h2>Receiving Materials</h2>
+                                        <h2>Materials Delivery</h2>
                                         <div class="breadcomb-report">
                                             <a onclick="addRow()" data-placement="left" title="Add Coloumn" class="btn waves-effect"><i class="notika-icon notika-plus-symbol"></i></a>
                                         </div>

@@ -131,19 +131,19 @@ class ProjectsController extends Controller
 
     public function projectAddRecivingMaterialsData(Request $request){
 
-        if ($request->hasFile('file')) {
+        if ($file = $request->file('file')) {
             $fileNameWithExtension  = $request->file('file')->getClientOriginalName();
             $fileName               = pathinfo($fileNameWithExtension, PATHINFO_FILENAME);
-            $fileExtension          = strtolower($request->file('file')->getClientOriginalExtension());
+            $fileExtension          = strtolower($file->getClientOriginalExtension());
 
             if ($fileExtension == 'pdf' || $fileExtension == 'docx' || $fileExtension == 'xlsx' || $fileExtension == 'xls') {
                 $fileNameToStore    = $fileName . '_' . time() . '.' . $fileExtension;
 
-                $path   =   base_path() . '/attachments/files/';
+                $path   =   public_path() . '/attachments/files/';
                 if(!is_dir ( $path))
-                    $path   =   base_path() . '/attachments/files/';
+                    $path   =   public_path() . '/attachments/files/';
 
-                $request->file('file')->move($path,$fileNameToStore);
+                $file->move($path,$fileNameToStore);
                 $data['file'] = $fileNameToStore;
             } else {
                 return redirect()->back()->with('error','incorrect file format');

@@ -304,13 +304,15 @@
                                 @endif
                             @endif
                             @if(Auth::user()->user_type != 2)
-                                @if(Auth::user()->user_type == 1001 || Auth::user()->user_type != 101)
+                                @if(Auth::user()->user_type != 101)
                                     @if(Auth::user()->user_type != 3)
-                                        <li><a href="{{asset('requestedGoods/addRequest')}}"><i class="notika-icon notika-windows"></i> Material Request</a></li>
-                                        <li><a href="{{asset('requestedGoods/addToolsRequest')}}"><i class="notika-icon notika-windows"></i> Tools/Assets Request</a></li>
+                                        @if(Auth::user()->user_type != 1001)
+                                            <li><a href="{{asset('requestedGoods/addRequest')}}"><i class="notika-icon notika-windows"></i> Material Request</a></li>
+                                            <li><a href="{{asset('requestedGoods/addToolsRequest')}}"><i class="notika-icon notika-windows"></i> Tools/Assets Request</a></li>
+                                        @endif
                                     @endif
                                 @endif
-                                @if(Auth::user()->user_type == 1001 || Auth::user()->user_type == 1 || Auth::user()->user_type == 3)
+                                @if(Auth::user()->user_type == 1 || Auth::user()->user_type == 3)
                                     @if(Auth::user()->user_type != 3)
                                         <li><a  href="{{asset('requestedGoods/MyOrders')}}"><i class="notika-icon notika-windows"></i> My Orders</a></li>
                                     @endif
@@ -371,28 +373,30 @@
                     @if(Auth::user()->user_type == 3 || Auth::user()->user_type == 1)
                         <div id="mailbox" class="tab-pane notika-tab-menu-bg animated flipInX">
                             <ul class="notika-main-menu-dropdown" id="sub_store_ul">
+                                @if(Auth::user()->user_type == 3 || Auth::user()->user_type == 1)
                                 @if(Auth::user()->user_type != 3)
                                     <li  class="active"><a href="{{asset('projects/requestProjectMaterials')}}/{{Session::get('project_id')}}">Issue Materials</a></li>
                                     <li><a href="{{asset('projects/projectReceivingMaterials')}}">Material Delivery</a></li>
                                     <li><a href="{{asset('projects/projectReceivingTools')}}">Tools/Assets Delivery</a></li>
-                                    <li><a href="{{asset('projects/engineerStoreOrders')}}">Material Issue Reports</a></li>
-
-
                                     <li>
                                         <div class="dropdown">
                                             <a href="#" class="dropdown-toggle" type="button" data-toggle="dropdown">
                                                 <i class="notika-icon notika-form"></i>
-                                                Idle Items
+                                                Reports
                                                 <span class="caret"></span></a>
                                             <ul class="dropdown-menu">
-                                                <li><a href="{{asset('projects/idleItems')}}">List</a></li>
-                                                <li><a href="{{asset('projects/myIdleItemsRequest')}}">Requested Items</a></li>
+                                                <li><a href="{{asset('projects/idleItems')}}">Idle Items</a></li>
+                                                <li><a href="{{asset('projects/myIdleItemsRequest')}}">Requested Idle Items</a></li>
+                                                <li><a href="{{asset('projects/engineerStoreOrders')}}">Material Issue Reports</a></li>
+                                                <li><a href="{{asset('reports/projectReceivingItems')}}/{{Session::get('project_id')}}">Material Delivery Reports</a></li>
+                                                <li><a href="{{asset('reports/projectInventoryList')}}/{{Session::get('project_id')}}">Project Inventory List</a></li>
                                             </ul>
                                         </div>
                                     </li>
                                 @endif
-                                    <li><a href="{{asset('reports/projectInventoryList')}}/{{Session::get('project_id')}}">Project Inventory List</a></li>
+                                @endif
                                 @if(Auth::user()->user_type == 3)
+                                        <li><a href="{{asset('reports/projectInventoryList')}}/{{Session::get('project_id')}}">Project Inventory List</a></li>
                                         <li><a href="{{asset('projects/pendingMaterialRequests')}}">Pending Issue Request</a></li>
                                         <li><a href="{{asset('projects/idleItemsRequests')}}">Idle Items Requests</a></li>
                                         <li><a href="{{asset('/storeReturnedItems')}}">Returned Items Request</a></li>
