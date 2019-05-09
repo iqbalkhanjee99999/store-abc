@@ -83,6 +83,20 @@ class ReportsController extends Controller
         return view('reports.projectRecivingItemsReports')->with('data',$data);
     }
 
+    public function showProjectToolsFormItems($id){
+
+        $reports = new Reports();
+        $data = $reports->showProjectToolsFormItems($id);
+        return view('reports.showProjectToolsFormItems')->with('data',$data);
+    }
+
+    public function projectReceivingToolsList(){
+
+        $reports = new Reports();
+        $data = $reports->projectReceivingToolsFrom();
+        return view('reports.projectReceivingToolsList')->with('data',$data);
+    }
+
     public function inventoryList(Request $request){
 
         $search = array();
@@ -322,8 +336,8 @@ class ReportsController extends Controller
     }
 
 
-    public function projectInventoryList(Request $request ,$noti_id = 0){
-
+    public function projectInventoryList(Request $request ){
+        $noti_id = $request->noti_id;
         if($noti_id > 0){
             $noti = new Notifications();
             $noti->changeStatusToRead($noti_id);
@@ -341,6 +355,20 @@ class ReportsController extends Controller
         $data = $project->projectInventoryList($search,$project_id);
 
         return view('reports/projectInventoryList')->with('data',$data)->with('categories',$categories);
+    }
+
+    public function projectToolsList(Request $request ){
+        $noti_id = $request->noti_id;
+        if($noti_id > 0){
+            $noti = new Notifications();
+            $noti->changeStatusToRead($noti_id);
+        }
+        $project_id    = Session::get('project_id');
+
+        $project = new Project();
+        $data = $project->projectToolsList($project_id);
+
+        return view('reports/projectToolsList')->with('data',$data);
     }
 
     public function allProjectsInventory(Request $request){
@@ -408,6 +436,18 @@ class ReportsController extends Controller
      * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
      */
     public function downloadFile($id){
+
+        $data = new Project();
+        $file_name = $data->getFileName($id);
+        $file= public_path(). "/attachments/files/".$file_name;
+        if(file_exists($file)){
+            return response()->download($file);
+        }else{
+            return redirect()->back()->with('error','No file found for this order');
+        }
+    }
+
+    public function downloadToolsFile($id){
 
         $data = new Project();
         $file_name = $data->getFileName($id);

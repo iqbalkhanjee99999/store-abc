@@ -86,7 +86,7 @@
                                             </div>
                                             <div class="col-lg-8 col-md-7 col-sm-7 col-xs-12">
                                                 <div class="nk-int-st">
-                                                    <input type="text" name="model_no" class="form-control input-sm" placeholder="Model Number" value="{{isset($data->model_no) ? $data->model_no : ''}}"  {{isset($tool)? 'required' : ''}}>
+                                                    <input type="text" name="model_no" class="form-control input-sm" placeholder="Model Number" value="{{isset($data->model_no) ? $data->model_no : (isset($asset_no) ? $asset_no : '')}}"  {{isset($tool)? 'readonly' : ''}}>
                                                 </div>
                                             </div>
                                         </div>

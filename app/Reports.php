@@ -67,6 +67,27 @@ class Reports extends Model
        return $data;
     }
 
+    public function showProjectToolsFormItems($id){
+       $data =  DB::table('projects_receiving_tools')
+           ->join('project_reciving_tools_form','projects_receiving_tools.form_id','=','project_reciving_tools_form.id')
+            ->join('tools_categories','projects_receiving_tools.category_id','=','tools_categories.id')
+           ->where('projects_receiving_tools.form_id',$id)
+           ->select(
+               'projects_receiving_tools.*',
+               'tools_categories.title'
+           )
+            ->get();
+
+       return $data;
+    }
+
+    public function projectReceivingToolsFrom(){
+       $data =  DB::table('project_reciving_tools_form')
+           ->where('project_id',Session('project_id'))
+           ->get();
+       return $data;
+    }
+
     public function recivingItemsReports($id){
        $data =  DB::table('form_items')
            ->join('reciving_goods','form_items.form_id','=','reciving_goods.id')

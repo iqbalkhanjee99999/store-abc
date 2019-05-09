@@ -42,7 +42,13 @@
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="data-table-list">
-                        <div class="basic-tb-hd"></div>
+                        <div class="basic-tb-hd">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="{{asset('/projects/idleItems')}}"><h2>Idle Materials</h2></a></li>
+                                <li><a href="{{asset('/projects/idleTools')}}"><h2>Idle Assets/Tools</h2></a></li>
+                            </ul>
+                            <br>
+                        </div>
                         <div class="table-responsive">
                             <table id="data-table-basic" class="table table-hover">
                                 <thead>

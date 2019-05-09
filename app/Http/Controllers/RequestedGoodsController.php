@@ -203,7 +203,7 @@ class RequestedGoodsController extends Controller
 
     public function addToolsRequestedGoods(Request $request){
 
-        $data['project_no']      = $request->project_no;
+        $data['location']      = $request->location;
         $data['tools_user']      = $request->tools_user;
         $data['items']           = $request->items;
 
@@ -223,16 +223,20 @@ class RequestedGoodsController extends Controller
     }
 
     public function storeToolsApprove($id){
+
         $goods = new RequestedGoods();
         $goods->storeToolsApprove($id);
 
-        $user       = new RequestedGoods();
-        $user_id    = $user->getToolsRequestedUserId($id);
+        $user    = new RequestedGoods();
+        $data    = $user->getToolsRequestedUserId($id);
+        $user_id = $data->requested_user_id;
+        $project_id = $data->project_id;
 
         $noti['title']          = 'Tools/Assets Request Approved';
         $noti['description']    = 'Your Request For Tools/Assets Approved';
         $noti['link']           = 'requestedGoods/MyToolsOrders';
         $noti['user_id']        = $user_id;
+        $noti['project_id']     = $project_id;
 
         $notification = new Notifications();
         $notification->engineerSendNotification($noti);
@@ -243,13 +247,16 @@ class RequestedGoodsController extends Controller
     public function storeToolsReject($id){
 
         $goods      = new RequestedGoods();
-        $user_id    = $goods->getToolsRequestedUserId($id);
+        $data    = $goods->getToolsRequestedUserId($id);
         $goods->storeToolReject($id);
+        $user_id = $data->requested_user_id;
+        $project_id = $data->project_id;
 
         $noti['title']          = 'Tools/Assets Request Rejected';
         $noti['description']    = 'Rejected By Store Manager';
-        $noti['link']           = 'requestedGoods/MyOrders';
+        $noti['link']           = 'requestedGoods/MyToolsOrders';
         $noti['user_id']        = $user_id;
+        $noti['project_id']     = $project_id;
 
 
         $notification = new Notifications();
@@ -284,6 +291,24 @@ class RequestedGoodsController extends Controller
         $item->markMaterialAsRecieved($id);
     }
 
+    public function rejectMaterialOrder($id){
+
+        $item = new RequestedGoods();
+        $project_name = $item->rejectMaterialOrder($id);
+
+        $goods = new RequestedGoods();
+        $goods->updateQuantity($id);
+
+        $noti['title']          = 'Materials Rejected';
+        $noti['description']    = 'Project : '.$project_name.'. Engineer rejected materials';
+        $noti['link']           = 'requestedGoods/PendingRequests';
+        $noti['user_id']        = 1;
+
+
+        $notification = new Notifications();
+        $notification->storeManagerSendNotification($noti);
+    }
+
     public function selectedProject(Request $request){
 
         $id = $request->project_id;
@@ -310,6 +335,18 @@ class RequestedGoodsController extends Controller
 
         return view('projects.returnedItems')->with('data',$data);
     }
+
+    public function returnedTools($id = 0){
+
+        if($id > 0){
+            $noti = new Notifications();
+            $noti->changeStatusToRead($id);
+        }
+        $goods  = new RequestedGoods();
+        $data   = $goods->getAllReturnedTools();
+
+        return view('projects.returnedTools')->with('data',$data);
+    }
     public function getStoreReturnedItems($id = 0){
 
         if($id > 0){
@@ -320,6 +357,18 @@ class RequestedGoodsController extends Controller
         $data   = $goods->getStoreReturnedItems();
 
         return view('projects.getStoreReturnedItems')->with('data',$data);
+    }
+
+    public function storeReturnedTools($id = 0){
+
+        if($id > 0){
+            $noti = new Notifications();
+            $noti->changeStatusToRead($id);
+        }
+        $goods  = new RequestedGoods();
+        $data   = $goods->storeReturnedTools();
+
+        return view('projects.getStoreReturnedTools')->with('data',$data);
     }
 
     public function returnedToStore(Request $request){
@@ -334,6 +383,19 @@ class RequestedGoodsController extends Controller
 
         $goods  = new RequestedGoods();
         $goods->returnedToStore($data);
+    }
+
+    public function returnedItemToStore(Request $request){
+
+        $data['id']         = $request->id;
+        $data['item_id']    = $request->item_id;
+        $data['shelf_no']   = $request->shelf_no;
+        $data['column_no']  = $request->column_no;
+        $data['zone_no']    = $request->zone_no;
+        $data['carton_no']  = $request->carton_no;
+
+        $goods  = new RequestedGoods();
+        $goods->returnedItemToStore($data);
     }
 
 }

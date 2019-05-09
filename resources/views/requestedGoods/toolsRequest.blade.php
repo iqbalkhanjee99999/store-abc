@@ -50,7 +50,7 @@
                                                         <th>Category</th>
                                                         <th>Item</th>
                                                         <th>Tools/Asset User</th>
-                                                        <th>Project No</th>
+                                                        <th>Location</th>
                                                         <th>Actions</th>
                                                     </tr>
                                                     <tr>
@@ -71,7 +71,7 @@
                                                             <input type="text" class="form-control tools_user" name="tools_user[]" required placeholder="user name" disabled>
                                                         </td>
                                                         <td>
-                                                            <input type="text" class="form-control project_no"  name="project_no[]" required placeholder="project number" disabled>
+                                                            <input type="text" class="form-control location"  name="location[]" required placeholder="Location" disabled>
                                                         </td>
                                                         <td></td>
                                                     </tr>
@@ -112,7 +112,7 @@
                                     <input type="text" class="form-control tools_user" name="tools_user[]" required placeholder="user name" disabled>
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control project_no"  name="project_no[]" required placeholder="project number" disabled>
+                                    <input type="text" class="form-control location"  name="location[]" required placeholder="Location" disabled>
                                 </td>
                                 <td>
                                     <a onclick="remove_row(this)" title="Remove Coloumn" class="btn-danger notika-btn-danger btn waves-effect"><i class="notika-icon notika-trash"></i></a>

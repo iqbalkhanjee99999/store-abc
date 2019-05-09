@@ -35,16 +35,18 @@
             </div>
         </div>
     </div>
+
+
     <div class="data-table-area">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="data-table-list">
                         <div class="basic-tb-hd">
-                                <ul class="nav nav-tabs">
-                                    <li class="active"><a href="{{asset('reports/inventoryList')}}"><h2>Materials</h2></a></li>
-                                    <li><a href="{{asset('reports/toolsInventoryList')}}"><h2>Assets/Tools</h2></a></li>
-                                </ul>
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="{{asset('reports/inventoryList')}}"><h2>Materials</h2></a></li>
+                                <li><a href="{{asset('reports/toolsInventoryList')}}"><h2>Assets/Tools</h2></a></li>
+                            </ul>
                             <br>
                         </div>
                         <div class="table-responsive">
@@ -70,8 +72,7 @@
                             <div class="col-md-6 ">
 
                             </div>
-
-                            <table class="table table-hover">
+                            <table id="data-table-basic" class="table table-hover">
                                 <thead>
                                 <tr>
                                     <th>Category</th>
@@ -83,16 +84,16 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($data as $k => $val)
-                                            <tr>
-                                                <td>{{$val->title}}</td>
-                                                <td>{{$val->item_description}}</td>
-                                                <td>{{$val->brand_name}}</td>
-                                                <td>{{$val->model_no}}</td>
-                                                <td style="color:indianred;font-weight: bold;">{{$val->total_avalible_quantity}}</td>
-                                                <td><a  href="{{asset('attachments/items_images/'.$val->photo)}}"><i class="fa fa-image"></i></a></td>
-                                            </tr>
-                                    @endforeach
+                                @foreach($data as $k => $val)
+                                    <tr>
+                                        <td>{{$val->title}}</td>
+                                        <td>{{$val->item_description}}</td>
+                                        <td>{{$val->brand_name}}</td>
+                                        <td>{{$val->model_no}}</td>
+                                        <td style="color:indianred;font-weight: bold;">{{$val->total_avalible_quantity}}</td>
+                                        <td><a  href="{{asset('attachments/items_images/'.$val->photo)}}"><i class="fa fa-image"></i></a></td>
+                                    </tr>
+                                @endforeach
                                 </tbody>
                                 <tfoot>
                                 <tr>
@@ -111,6 +112,7 @@
             </div>
         </div>
     </div>
+
     <script src="{{asset('js/inventory/main.js')}}"></script>
 
 @endsection

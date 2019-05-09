@@ -111,11 +111,11 @@
                                             <div class="form-group">
                                                 <div class="row">
                                                     <div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
-                                                        <label class="hrzn-fm "><strong>Receiving From</strong></label>
+                                                        <label class="hrzn-fm "><strong>Supplier Name</strong></label>
                                                     </div>
                                                     <div class="col-lg-8 col-md-7 col-sm-7 col-xs-12">
                                                         <div class="nk-int-st">
-                                                            <input type="text" id="reciving_from" name="reciving_from" class="form-control input-md" placeholder="Reciving Form" required>
+                                                            <input type="text" id="reciving_from" name="reciving_from" class="form-control input-md" placeholder="Supplier Name" required>
                                                         </div>
                                                     </div>
                                                 </div>

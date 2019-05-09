@@ -33,6 +33,7 @@ Route::get('/recivingGoods/getCategoryItems/{id}', 'RecivingGoodsController@getC
 Route::get('/recivingGoods/getRecivingCategoryItems/{id}', 'RecivingGoodsController@getRecivingCategoryItems');
 Route::get('/recivingGoods/getRequestedCategoryItems/{id}', 'RecivingGoodsController@getRequestedCategoryItems');
 Route::get('/recivingGoods/getToolsCategoryItems/{id}', 'RecivingGoodsController@getToolsCategoryItems');
+Route::get('/recivingGoods/getProjectToolsCategoryItems/{id}', 'RecivingGoodsController@getProjectToolsCategoryItems');
 Route::post('/recivingGoods/getItemDetails', 'RecivingGoodsController@getItemDetails');
 Route::post('/recivingGoods/addRecivingGoodsData', 'RecivingGoodsController@addRecivingGoodsData');
 Route::get('/recivingGoods/getItembyCat/{id}', 'RecivingGoodsController@getItembyCat');
@@ -72,10 +73,14 @@ Route::get('requestedGoods/markToolAsNeedRepair/{id}', 'RequestedGoodsController
 Route::get('requestedGoods/markToolAsDemaged/{id}', 'RequestedGoodsController@markToolAsDemaged');
 Route::get('requestedGoods/markToolAsRecieved/{id}', 'RequestedGoodsController@markToolAsRecieved');
 Route::get('requestedGoods/markMaterialAsRecieved/{id}', 'RequestedGoodsController@markMaterialAsRecieved');
+Route::get('requestedGoods/rejectMaterialOrder/{id}', 'RequestedGoodsController@rejectMaterialOrder');
 Route::get('requestedGoods/selectedProject', 'RequestedGoodsController@selectedProject');
 Route::get('requestedGoods/returnedToStore/{id}', 'RequestedGoodsController@returnedToStore');
+Route::get('requestedGoods/returnedItemToStore/{id}', 'RequestedGoodsController@returnedItemToStore');
 Route::get('/returnedItems/{id?}', 'RequestedGoodsController@returnedItems');
+Route::get('/returnedTools/{id?}', 'RequestedGoodsController@returnedTools');
 Route::get('/storeReturnedItems/{id?}', 'RequestedGoodsController@getStoreReturnedItems');
+Route::get('/storeReturnedTools/{id?}', 'RequestedGoodsController@storeReturnedTools');
 
 /////////////////////Reports////////////////////////////////////
 
@@ -85,7 +90,9 @@ Route::get('reports/recivingItemsReports/{id}', 'ReportsController@recivingItems
 Route::get('reports/inventoryList', 'ReportsController@inventoryList');
 Route::get('reports/recivingItems', 'ReportsController@recivingItems');
 Route::get('reports/projectReceivingItems/{id}', 'ReportsController@projectReceivingItems');
+Route::get('reports/projectReceivingToolsList', 'ReportsController@projectReceivingToolsList');
 Route::get('reports/projectRecivingItemsReports/{id}', 'ReportsController@projectRecivingItemsReports');
+Route::get('reports/showProjectToolsFormItems/{id}', 'ReportsController@showProjectToolsFormItems');
 Route::get('reports/exportToExcel', 'ReportsController@exportToExcel');
 Route::get('reports/exportToExcelRequested', 'ReportsController@exportToExcelRequested');
 Route::get('reports/exportProjectMaterialsToExcel', 'ReportsController@exportProjectMaterialsToExcel');
@@ -93,8 +100,10 @@ Route::get('reports/exportToExcelRecieved', 'ReportsController@exportToExcelReci
 Route::get('reports/toolsInventoryList', 'ReportsController@toolsInventoryList');
 Route::get('reports/exportToolsToExcel', 'ReportsController@exportToolsToExcel');
 Route::get('reports/projectInventoryList/{id}/{noti_id?}', 'ReportsController@projectInventoryList');
+Route::get('reports/projectToolsList/{noti_id?}', 'ReportsController@projectToolsList');
 Route::get('reports/allProjectsInventory/{id?}', 'ReportsController@allProjectsInventory');
 Route::get('reports/downloadFile/{id}', 'ReportsController@downloadFile');
+Route::get('reports/downloadToolsFile/{id}', 'ReportsController@downloadToolsFile');
 
 //////////////////Notificaitons////////////////////////////////
 
@@ -118,20 +127,41 @@ Route::get('projects/requestProjectMaterials/{id}', 'ProjectsController@requestP
 Route::get('projects/getRequestedProjectCategoryItems/{id}', 'ProjectsController@getRequestedProjectCategoryItems');
 Route::get('projects/getItemDetails/{id}', 'ProjectsController@getItemDetails');
 Route::post('projects/addProjectMaterialRequest', 'ProjectsController@addProjectMaterialRequest');
+Route::post('projects/addProjectToolsRequest', 'ProjectsController@addProjectToolsRequest');
 Route::get('projects/pendingMaterialRequests/{id?} ', 'ProjectsController@pendingMaterialRequests');
 Route::get('projects/storeKeeperApprove/{id}', 'ProjectsController@storeKeeperApprove');
 Route::get('projects/storeKeeperReject/{id}', 'ProjectsController@storeKeeperReject');
 Route::get('projects/engineerStoreOrders/{id?}', 'ProjectsController@engineerStoreOrders');
+Route::get('projects/issuedToEngineers', 'ProjectsController@issuedToEngineers');
+Route::get('projects/issuedToSubStores', 'ProjectsController@issuedToSubStores');
 Route::get('projects/markItemAsRecievedFromStore/{id}', 'ProjectsController@markItemAsRecievedFromStore');
 Route::get('projects/markStoreItemAsIdle/{id}', 'ProjectsController@markStoreItemAsIdle');
+Route::get('projects/markStoreToolAsIdle/{id}', 'ProjectsController@markStoreToolAsIdle');
 Route::get('projects/markStoreItemAsFunctional/{id}', 'ProjectsController@markStoreItemAsFunctional');
+Route::get('projects/markStoreToolAsFunctional/{id}', 'ProjectsController@markStoreToolAsFunctional');
 Route::get('projects/returnItemToMainStore/{id}', 'ProjectsController@returnItemToMainStore');
+Route::get('projects/returnToolToMainStore/{id}', 'ProjectsController@returnToolToMainStore');
 Route::get('projects/idleItems', 'ProjectsController@idleItems');
+Route::get('projects/idleTools', 'ProjectsController@idleTools');
 Route::get('projects/idleItemsRequests/{id?}', 'ProjectsController@idleItemsRequests');
+Route::get('projects/idleToolsRequests/{id?}', 'ProjectsController@idleToolsRequests');
 Route::get('projects/requestIdleItems/{id}', 'ProjectsController@requestIdleItems');
+Route::get('projects/requestIdleTools/{id}', 'ProjectsController@requestIdleTools');
 Route::get('projects/approveRequestIdleItems', 'ProjectsController@approveRequestIdleItems');
+Route::get('projects/approveRequestIdleTools', 'ProjectsController@approveRequestIdleTools');
 Route::get('projects/rejectIdleItemsRequest', 'ProjectsController@rejectIdleItemsRequest');
+Route::get('projects/rejectIdleToolRequest', 'ProjectsController@rejectIdleToolRequest');
 Route::get('projects/myIdleItemsRequest/{id?}', 'ProjectsController@myIdleItemsRequest');
+Route::get('projects/myIdleToolsRequest/{id?}', 'ProjectsController@myIdleToolsRequest');
 Route::get('projects/idleItemsRecevied', 'ProjectsController@idleItemsRecevied');
+Route::get('projects/idleToolsRecevied', 'ProjectsController@idleToolsRecevied');
 Route::get('projects/storeApproveReturnedItems', 'ProjectsController@storeApproveReturnedItems');
+Route::get('projects/storeApproveReturnedTools', 'ProjectsController@storeApproveReturnedTools');
 Route::get('projects/storeRejectReturnedItems', 'ProjectsController@storeRejectReturnedItems');
+Route::get('projects/storeRejectReturnedTool', 'ProjectsController@storeRejectReturnedTool');
+Route::get('projects/storeManagerRejectReturnedItems', 'ProjectsController@storeManagerRejectReturnedItems');
+Route::get('projects/storeManagerRejectReturnedTools', 'ProjectsController@storeManagerRejectReturnedTools');
+Route::get('projects/projectReceivedMaterials', 'ProjectsController@projectReceivedMaterials');
+Route::get('projects/projectReceivedToolsReport', 'ProjectsController@projectReceivedToolsReport');
+Route::get('projects/RecivedMaterialsFromSubStore', 'ProjectsController@RecivedMaterialsFromSubStore');
+Route::get('projects/projectReturnedMaterials', 'ProjectsController@projectReturnedMaterials');

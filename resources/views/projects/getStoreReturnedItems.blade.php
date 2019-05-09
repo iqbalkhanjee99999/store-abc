@@ -38,6 +38,10 @@
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="data-table-list">
                         <div class="basic-tb-hd">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="{{asset('/storeReturnedItems')}}"><h2>Materials</h2></a></li>
+                                <li><a href="{{asset('/storeReturnedTools')}}"><h2>Assets/Tools</h2></a></li>
+                            </ul>
                         </div>
                         <div class="table-responsive">
                             <table id="data-table-basic" class="table table-hover">

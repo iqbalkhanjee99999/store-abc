@@ -66,7 +66,8 @@
                                         <td>{{$val->quantity}}</td>
                                         <td>{{$val->reason}}</td>
                                         <td>
-                                            <button type="button" class="btn btn-success notika-btn-success" data-toggle="modal" data-target="#myModal{{$val->id}}" >Recevied</button>
+                                            <button type="button" class="btn btn-success notika-btn-success col-sm-12" data-toggle="modal" data-target="#myModal{{$val->id}}" >Add to store</button>
+                                            <button type="button" class="btn btn-danger notika-btn-danger col-sm-12" onclick="rejectReturendItem({{$val->id}},{{$val->project_id}}, {{$val->item_id}})" style="margin-top: 3px;">Reject</button>
                                         </td>
                                     </tr>
 

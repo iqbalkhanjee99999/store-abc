@@ -48,6 +48,7 @@
                                                     <tr>
                                                         <th>Category</th>
                                                         <th>Item</th>
+                                                        <th>Unit</th>
                                                         <th>Model no</th>
                                                         <th>Brand Name</th>
                                                         <th>Avalible Quantity</th>
@@ -68,6 +69,9 @@
                                                             <select class="form-control items" name="items[]" onchange="getItems(this)" disabled>
                                                                 <option value="0">Select Item</option>
                                                             </select>
+                                                        </td>
+                                                        <td>
+                                                            <label class="unit">Unit</label>
                                                         </td>
                                                         <td>
                                                             <label class="model_no">Model no</label>

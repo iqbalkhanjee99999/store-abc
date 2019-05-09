@@ -7,14 +7,14 @@ $(function() {
 });
 
 function getCategoryItems(category) {
-    var avalible_items  = new Array();
+    var avalible_items  = [];
     var numItems = $('.model_no').length;
     var selectedItems = $('.items');
     selectedItems.each(function (index) {
         if(index != numItems -1) {
             avalible_items[index] = $(this).val();
         }
-    })
+    });
 
     debugger;
 
@@ -62,14 +62,14 @@ function getCategoryItems(category) {
 
 function getToolsCategoryItems(category) {
 
-    var avalible_items  = new Array();
+    var avalible_items  = [];
     var numItems = $('.model_no').length;
     var selectedItems = $('.items');
     selectedItems.each(function (index) {
         if(index != numItems -1) {
             avalible_items[index] = $(this).val();
         }
-    })
+    });
 
     $('.ajaxProgress').show();
     basepath    =   window.location.origin;
@@ -111,6 +111,51 @@ function getToolsCategoryItems(category) {
     });
 }
 
+
+function getProjectToolsCategoryItems(category) {
+
+    $('.ajaxProgress').show();
+    basepath    =   window.location.origin;
+    var id      =   parseInt(category.value);
+    var url     =  basepath+'/recivingGoods/getProjectToolsCategoryItems/'+id;
+
+    var row     = category.closest('tr');
+
+    var model        =  $(row).find('.model');
+    var asset_no        =  $(row).find('.asset_no');
+    var image       =  $(row).find('.image');
+    var location       =  $(row).find('.location');
+    var description       =  $(row).find('.description');
+    var categories = [];
+
+    $('.categories').each(function (index) {
+        if(index < $('.categories').length - 1){
+            categories.push($(this).val());
+        }
+    });
+
+    var target = category.value;
+
+    var numOccurences = $.grep(categories, function (elem) {
+        return elem === target;
+    }).length;
+
+    $.ajax({
+        type: "GET",
+        url:  url,
+        data:{numOccurences:numOccurences},
+        success: function(data) {
+            var obj = JSON.parse(data);
+            asset_no.val(obj.asset_no);
+            $('.ajaxProgress').hide();
+            model.prop("disabled", false);
+            image.prop("disabled", false);
+            location.prop("disabled", false);
+            description.prop("disabled", false);
+        }
+    });
+}
+
 function getItems(item) {
 
     basepath    =   window.location.origin;
@@ -121,11 +166,13 @@ function getItems(item) {
 
     var row     = item.closest('tr');
 
+    unit            =  $(row).find('.unit');
     model_no        =  $(row).find('.model_no');
-    brand_name       =  $(row).find('.brand_name');
-    avalible_qty       =  $(row).find('.avalible_qty');
-    requested_qty = $(row).find('.requested_qty');
-    loc = $(row).find('.location');
+    brand_name      =  $(row).find('.brand_name');
+    avalible_qty    =  $(row).find('.avalible_qty');
+    requested_qty   = $(row).find('.requested_qty');
+    requested_qty   = $(row).find('.requested_qty');
+    loc             = $(row).find('.location');
     requested_qty.prop("disabled", false);
     loc.prop("disabled", false);
 
@@ -147,11 +194,14 @@ function getItems(item) {
                 }
                 if(obj.brand_name != '')
                     brand_name.text(obj.brand_name);
+
                     avalible_qty.text(obj.quantity);
+                    unit.text(obj.quantity_unit);
             }
             else{
                 model_no.text('Model No');
                 brand_name.text('Zone No');
+                model_no.text('Unit');
                 avalible_qty.text('Avalible Qty');
             }
 
@@ -163,15 +213,15 @@ function getItems(item) {
 function enableTextBoxes(item) {
 
     var row     = item.closest('tr');
-    tools_user        =  $(row).find('.tools_user');
-    project_no        =  $(row).find('.project_no');
+    var tools_user        =  $(row).find('.tools_user');
+    var location        =  $(row).find('.location');
 
     if(item.value == 0){
         tools_user.prop("disabled", true);
-        project_no.prop("disabled", true);
+        location.prop("disabled", true);
     }else{
         tools_user.prop("disabled", false);
-        project_no.prop("disabled", false);
+        location.prop("disabled", false);
     }
 
 }
@@ -218,7 +268,7 @@ function validateRequest() {
         if(index != numItems - 1){
             avalible_qty[index] = parseInt($(this).text());
         }
-    })
+    });
 
     $('.requested_qty').each(function (index) {
         if(index != numItems - 1){
@@ -233,7 +283,7 @@ function validateRequest() {
                 title = 'Quantity Selected Not Avalible';
             }
         }
-    })
+    });
 
     $('.items').each(function (index) {
       if(index != numItems - 1){
@@ -242,7 +292,7 @@ function validateRequest() {
               title = 'Item is not selected';
           }
       }
-  })
+  });
 
     if(error == 1){
         swal({
@@ -264,14 +314,14 @@ function validateToolsRequest() {
     debugger;
 
 
-    $('.project_no').each(function (index) {
+    $('.location').each(function (index) {
         if(index != numItems - 1){
             if($(this).val() == ''){
                 error = 1;
-                title = 'Please Provide Project Number';
+                title = 'Please Provide Location';
             }
         }
-    })
+    });
 
     $('.tools_user').each(function (index) {
         if(index != numItems - 1){
@@ -280,7 +330,7 @@ function validateToolsRequest() {
                 title = 'Please Provide User Name ';
             }
         }
-    })
+    });
 
     $('.items').each(function (index) {
         if(index != numItems - 1){
@@ -289,7 +339,7 @@ function validateToolsRequest() {
                 title = 'Please Select Item';
             }
         }
-    })
+    });
 
     $('.categories').each(function (index) {
         if(index != numItems - 1){
@@ -298,7 +348,7 @@ function validateToolsRequest() {
                 title = 'Please Select Category';
             }
         }
-    })
+    });
 
     if(error == 1){
         swal({
@@ -308,6 +358,90 @@ function validateToolsRequest() {
         })
     }else{
         $('#addToolsRequest').submit();
+    }
+}
+
+function validateProjectToolsRequest() {
+
+    event.preventDefault();
+    var title = '';
+    var error = 0;
+    var numItems = $('.categories').length;
+    debugger;
+
+
+
+    if($('#file').val() == ''){
+        error = 1;
+        title = 'Please Attach Delivery Note';
+    }
+
+    if($('#reciving_from').val() == ''){
+        error = 1;
+        title = 'Please Provide Supplier Name';
+    }
+    $('.location').each(function (index) {
+        if(index != numItems - 1){
+            if($(this).val() == ''){
+                error = 1;
+                title = 'Please Provide Location';
+            }
+        }
+    });
+
+    $('.image').each(function (index) {
+        if(index != numItems - 1){
+            if($(this).val() == ''){
+                error = 1;
+                title = 'Please Provide Item Image';
+            }
+        }
+    });
+
+    $('.asset_no').each(function (index) {
+        if(index != numItems - 1){
+            if($(this).val() == ''){
+                error = 1;
+                title = 'Please Provide Asset No';
+            }
+        }
+    });
+
+    $('.model').each(function (index) {
+        if(index != numItems - 1){
+            if($(this).val() == 0){
+                error = 1;
+                title = 'Please Provide Model No';
+            }
+        }
+    });
+
+    $('.description').each(function (index) {
+        if(index != numItems - 1){
+            if($(this).val() == 0){
+                error = 1;
+                title = 'Please Provide Description';
+            }
+        }
+    });
+
+    $('.categories').each(function (index) {
+        if(index != numItems - 1){
+            if($(this).val() == 0){
+                error = 1;
+                title = 'Please Select Category';
+            }
+        }
+    });
+
+    if(error == 1){
+        swal({
+            title: title,
+            type: "warning",
+            confirmButtonText: "OK",
+        })
+    }else{
+        $('#addProjectToolsRequest').submit();
     }
 }
 
@@ -356,7 +490,7 @@ function returnTool(item_id,item_name,requested_goods_id) {
         '<button type="button" role="button" id="btn_demaged" tabindex="0" class="btn btn-danger col-md-3" style="margin-left: 15px;">' + 'Damaged' + '</button><br>',
         showCancelButton: false,
         showConfirmButton: false
-    })
+    });
     $('#btn_good').click(function () {
         swal({
             title: "Are You Sure",
@@ -380,7 +514,7 @@ function returnTool(item_id,item_name,requested_goods_id) {
             }
         });
         })
-    })
+    });
     $('#btn_repair').click(function () {
         swal({
             title: "Are You Sure",
@@ -404,7 +538,7 @@ function returnTool(item_id,item_name,requested_goods_id) {
                 }
             });
         })
-    })
+    });
     $('#btn_demaged').click(function () {
         swal({
             title: "Are You Sure",

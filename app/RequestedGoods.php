@@ -76,9 +76,10 @@ class RequestedGoods extends Model
                     'category_id'       => $category->category_id,
                     'item_id'           => $data['items'][$k],
                     'requested_user_id' => Auth::user()->id,
-                    'project_name'      => $data['project_no'][$k],
+                    'project_id'      => Session('project_id'),
                     'date'              => date('Y-m-d'),
                     'tools_user'        => $data['tools_user'][$k],
+                    'location'        => $data['location'][$k],
                 ]);
             DB::table('tools_category_items')
                 ->where('id',$data['items'][$k])
@@ -114,12 +115,14 @@ class RequestedGoods extends Model
             ->join('tools_category_items','tools_request_goods.item_id','=','tools_category_items.id')
             ->join('tools_categories','tools_request_goods.category_id','=','tools_categories.id')
             ->join('users','tools_request_goods.requested_user_id','=','users.id')
+            ->join('projects','tools_request_goods.project_id','=','projects.id')
             ->where('tools_request_goods.store_approval',0)
             ->select(
                 'tools_request_goods.id as requested_goods_id',
                 'tools_request_goods.*',
                 'tools_categories.*',
                 'tools_category_items.*',
+                'projects.project_name',
                 'users.name'
             )
             ->get();
@@ -192,15 +195,18 @@ class RequestedGoods extends Model
             ]);
         $data = DB::table('tools_request_goods')
             ->where('id',$id)
-            ->select('item_id')
+            ->select('item_id','project_id')
             ->first();
         $item = $data->item_id;
+        $project_id = $data->project_id;
 
         DB::table('tools_category_items')
             ->where('id',$item)
             ->update([
                 'is_taken'   => 0,
             ]);
+
+        return $project_id;
 
     }
 
@@ -239,6 +245,94 @@ class RequestedGoods extends Model
         return $data;
     }
 
+    public function projectReceivedMaterials(){
+        $data = DB::table('request_goods')
+            ->join('category_items','request_goods.item_id','=','category_items.id')
+            ->join('categories','request_goods.category_id','=','categories.id')
+            ->join('users','request_goods.user_id','=','users.id')
+            ->where('project_id',Session::get('project_id'))
+            ->where('order_recieved',1)
+            ->select(
+                'request_goods.id as requested_goods_id',
+                'request_goods.*',
+                'categories.*',
+                'category_items.*',
+                'users.name'
+            )
+            ->get();
+
+        return $data;
+    }
+
+    public function projectReceivedToolsReport(){
+        $data = DB::table('tools_request_goods')
+            ->join('tools_category_items','tools_request_goods.item_id','=','tools_category_items.id')
+            ->join('tools_categories','tools_request_goods.category_id','=','tools_categories.id')
+            ->join('users','tools_request_goods.requested_user_id','=','users.id')
+            ->where('project_id',Session::get('project_id'))
+            ->where('order_recieved',1)
+            ->select(
+                'tools_request_goods.id as tools_request_goods_id',
+                'tools_request_goods.*',
+                'tools_categories.*',
+                'tools_category_items.*',
+                'users.name'
+            )
+            ->get();
+
+        return $data;
+    }
+
+    public function RecivedMaterialsFromSubStore(){
+        $data = DB::table('project_idle_items_request')
+            ->join('category_items','project_idle_items_request.item_id','=','category_items.id')
+            ->join('categories','project_idle_items_request.category_id','=','categories.id')
+            ->join('users','project_idle_items_request.requested_user_id','=','users.id')
+            ->join('projects','project_idle_items_request.requested_project_id','=','projects.id')
+            ->where('is_recevied',1)
+            ->where('requested_project_id',Session('project_id'))
+            ->select(
+                'project_idle_items_request.id as idle_items_request_id',
+                'project_idle_items_request.quantity as requested_qty',
+                'project_idle_items_request.*',
+                'categories.*',
+                'category_items.*',
+                'projects.project_name',
+                'users.name'
+            )
+            ->get();
+
+        return $data;
+    }
+    public function projectReturnedMaterials(){
+        $data = DB::table('returned_items')
+            ->join('projects','returned_items.project_id','projects.id')
+            ->join('category_items','returned_items.item_id','category_items.id')
+            ->join('categories','category_items.category_id','categories.id')
+            ->select(
+                'categories.title as category_name',
+                'category_items.description as item_name',
+                'category_items.brand_name',
+                'category_items.model_no',
+                'returned_items.quantity',
+                'returned_items.date',
+                'returned_items.engineer_name',
+                'returned_items.reason',
+                'returned_items.item_id',
+                'returned_items.project_id',
+                'projects.project_name',
+                'returned_items.id'
+            )
+            ->where('project_id',Session('project_id'))
+            ->where('store_approve',1)
+            ->get();
+
+//        echo "<pre>";
+//        print_r($data);die();
+        return $data;
+
+    }
+
     public function myStoreOrders(){
         $data = DB::table('project_request_materials')
             ->join('category_items','project_request_materials.item_id','=','category_items.id')
@@ -257,12 +351,51 @@ class RequestedGoods extends Model
         return $data;
     }
 
+    public function materialsIssuedToEngineers(){
+        $data = DB::table('project_request_materials')
+            ->join('category_items','project_request_materials.item_id','=','category_items.id')
+            ->join('categories','project_request_materials.category_id','=','categories.id')
+            ->join('users','project_request_materials.user_id','=','users.id')
+            ->where('project_id',Session::get('project_id'))
+            ->where('store_approval',1)
+            ->select(
+                'project_request_materials.id as requested_goods_id',
+                'project_request_materials.*',
+                'categories.*',
+                'category_items.*',
+                'users.name'
+            )
+            ->get();
+        return $data;
+    }
+
+    public function materialsIssuedToSubStores(){
+        $data = DB::table('project_idle_items_request')
+            ->join('category_items','project_idle_items_request.item_id','=','category_items.id')
+            ->join('categories','project_idle_items_request.category_id','=','categories.id')
+            ->join('users','project_idle_items_request.requested_user_id','=','users.id')
+            ->join('projects','project_idle_items_request.requested_project_id','=','projects.id')
+            ->where('storekeeper_approve',1)
+            ->where('project_id',Session('project_id'))
+            ->select(
+                'project_idle_items_request.id as idle_items_request_id',
+                'project_idle_items_request.quantity as requested_qty',
+                'project_idle_items_request.*',
+                'categories.*',
+                'category_items.*',
+                'projects.project_name',
+                'users.name'
+            )
+            ->get();
+        return $data;
+    }
+
     public function myToolsOrders(){
         $data = DB::table('tools_request_goods')
             ->join('tools_category_items','tools_request_goods.item_id','=','tools_category_items.id')
             ->join('tools_categories','tools_request_goods.category_id','=','tools_categories.id')
             ->join('users','tools_request_goods.requested_user_id','=','users.id')
-            ->where('tools_request_goods.requested_user_id',Auth::user()->id)
+            ->where('tools_request_goods.project_id',Session('project_id'))
             ->select(
                 'tools_request_goods.id as requested_goods_id',
                 'tools_request_goods.*',
@@ -317,9 +450,9 @@ class RequestedGoods extends Model
     public function getToolsRequestedUserId($id){
         $data = DB::table('tools_request_goods')
             ->where('id',$id)
-            ->select('requested_user_id')
+            ->select('requested_user_id','project_id')
             ->first();
-        return $data->requested_user_id;
+        return $data;
     }
 
     public function updateQuantity($id){
@@ -375,6 +508,24 @@ class RequestedGoods extends Model
             ->update([
                 'order_recieved' => 1,
             ]);
+
+        $data = DB::table('tools_request_goods')
+            ->where('id',$id)
+            ->first();
+
+        DB::table('project_tools')
+            ->insert([
+                'project_id'            =>  Session('project_id'),
+                'category_id'           =>  $data->category_id,
+                'location'              =>  $data->location,
+                'item_id'               =>  $data->item_id,
+                'quantity'              =>  1,
+                'is_idle'               =>  0,
+                'under_store_approval'  =>  0,
+                'created_at'            =>   Carbon::now()->toDateTimeString(),
+                'updated_at'            =>   Carbon::now()->toDateTimeString(),
+            ]);
+
     }
 
     public function markMaterialAsRecieved($id){
@@ -436,13 +587,31 @@ class RequestedGoods extends Model
             ]);
     }
 
+    public function rejectMaterialOrder($id){
+
+        DB::table('request_goods')
+            ->where('id',$id)
+            ->update([
+                'order_recieved'   => 2,
+            ]);
+
+        $data = DB::table('request_goods')
+            ->join('projects','request_goods.project_id','=','projects.id')
+            ->select(
+                'project_name'
+            )
+            ->where('request_goods.id',$id)
+            ->first();
+        return $data->project_name;
+    }
+
     public function getAllReturnedGoods(){
         $data = DB::table('returned_items')
             ->join('projects','returned_items.project_id','projects.id')
             ->join('category_items','returned_items.item_id','category_items.id')
             ->join('categories','category_items.category_id','categories.id')
             ->select(
-                'categories.description as category_name',
+                'categories.title as category_name',
                 'category_items.description as item_name',
                 'category_items.zone_no',
                 'category_items.carton_no',
@@ -453,6 +622,7 @@ class RequestedGoods extends Model
                 'returned_items.engineer_name',
                 'returned_items.reason',
                 'returned_items.item_id',
+                'returned_items.project_id',
                 'projects.project_name',
                 'returned_items.id'
             )
@@ -462,13 +632,42 @@ class RequestedGoods extends Model
         return $data;
     }
 
+
+    public function getAllReturnedTools(){
+        $data = DB::table('returned_tools')
+            ->join('projects','returned_tools.project_id','projects.id')
+            ->join('tools_category_items','returned_tools.item_id','tools_category_items.id')
+            ->join('tools_categories','tools_category_items.category_id','tools_categories.id')
+            ->select(
+                'tools_categories.title as category_name',
+                'tools_category_items.description as item_name',
+                'tools_category_items.zone_no',
+                'tools_category_items.carton_no',
+                'tools_category_items.column_no',
+                'tools_category_items.shelf_no',
+                'tools_category_items.brand_name',
+                'tools_category_items.model_no',
+                'returned_tools.engineer_name',
+                'returned_tools.reason',
+                'returned_tools.item_id',
+                'returned_tools.project_id',
+                'projects.project_name',
+                'returned_tools.id'
+            )
+            ->where('returned_tools.is_returned',0)
+            ->where('returned_tools.store_approve',1)
+            ->get();
+
+        return $data;
+    }
+
     public function getStoreReturnedItems(){
         $data = DB::table('returned_items')
             ->join('projects','returned_items.project_id','projects.id')
             ->join('category_items','returned_items.item_id','category_items.id')
             ->join('categories','category_items.category_id','categories.id')
             ->select(
-                'categories.description as category_name',
+                'categories.title as category_name',
                 'category_items.description as item_name',
                 'category_items.brand_name',
                 'returned_items.quantity',
@@ -482,6 +681,30 @@ class RequestedGoods extends Model
             ->where('returned_items.is_returned',0)
             ->where('returned_items.store_approve',0)
             ->get();
+        return $data;
+    }
+
+    public function storeReturnedTools(){
+        $data = DB::table('returned_tools')
+            ->join('projects','returned_tools.project_id','projects.id')
+            ->join('tools_category_items','returned_tools.item_id','=','tools_category_items.id')
+            ->join('tools_categories','tools_category_items.category_id','=','tools_categories.id')
+            ->select(
+                'tools_categories.title as category_name',
+                'tools_category_items.description as item_name',
+                'tools_category_items.brand_name',
+                'tools_category_items.model_no',
+                'returned_tools.reason',
+                'returned_tools.project_id',
+                'returned_tools.engineer_name',
+                'returned_tools.item_id',
+                'projects.project_name',
+                'returned_tools.id'
+            )
+            ->where('returned_tools.is_returned',0)
+            ->where('returned_tools.store_approve',0)
+            ->get();
+
         return $data;
     }
 
@@ -503,6 +726,24 @@ class RequestedGoods extends Model
                     'zone_no'           => $data['zone_no'],
                     'shelf_no'          => $data['shelf_no'],
                     'carton_no'         => $data['carton_no'],
+                ]);
+    }
+
+    public function returnedItemToStore($data){
+        DB::table('returned_tools')
+            ->where('id',$data['id'])
+            ->update([
+                'is_returned' => 1
+            ]);
+        DB::table('tools_category_items')
+            ->where('id',$data['item_id'])
+            ->update([
+                    'column_no'         => $data['column_no'],
+                    'zone_no'           => $data['zone_no'],
+                    'shelf_no'          => $data['shelf_no'],
+                    'carton_no'         => $data['carton_no'],
+                    'is_taken'          => 0,
+                    'project_recived'   => 0,
                 ]);
     }
 }

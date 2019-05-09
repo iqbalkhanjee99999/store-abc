@@ -19,6 +19,7 @@
                                     </div>
                                     <div class="breadcomb-ctn" style="margin-top: 10px;">
                                         <h2>{{Session::get('project_name')}}</h2>
+                                        <p>Idle Items Requests</p>
                                     </div>
                                 </div>
                             </div>
@@ -38,7 +39,12 @@
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="data-table-list">
                         <div class="basic-tb-hd">
-                            <h2>Idle Items Requests</h2>
+                            <div class="basic-tb-hd">
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a href="{{asset('projects/idleItemsRequests')}}"><h2>Idle Items Requests</h2></a></li>
+                                    <li><a href="{{asset('projects/idleToolsRequests')}}"><h2>Idle Tools Requests</h2></a></li>
+                                </ul>
+                            </div>
                         </div>
                         <div class="table-responsive">
                             <table id="data-table-basic" class="table table-hover">

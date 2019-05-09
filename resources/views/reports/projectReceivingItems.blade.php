@@ -18,7 +18,8 @@
                                         <i class="notika-icon notika-form"></i>
                                     </div>
                                     <div class="breadcomb-ctn" style="margin-top:10px;">
-                                        <h2>Project Material Delivery </h2>
+                                        <h2>{{Session('project_name')}}</h2>
+                                        <p>Project Material Delivery </p>
                                     </div>
 
                                 </div>

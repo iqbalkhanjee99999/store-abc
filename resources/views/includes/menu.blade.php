@@ -248,9 +248,9 @@
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <ul class="nav nav-tabs notika-menu-wrap menu-it-icon-pro">
-                    @if(Auth::user()->user_type == 1 || Auth::user()->user_type == 3)
-                        <li  id="main_store"><a data-toggle="tab" href="#Home"><i class="fa fa-home"></i> Main Store</a></li>
+                    @if(Auth::user()->user_type == 1)
                         <li id="sub_store"><a data-toggle="tab" href="#mailbox"><i class="notika-icon notika-house" onclick=""></i> Sub Store</a></li>
+                        <li  id="main_store"><a data-toggle="tab" href="#Home"><i class="fa fa-home"></i> Main Store</a></li>
                     @endif
                 </ul>
                 <div class="tab-content custom-menu-content">
@@ -385,21 +385,37 @@
                                                 Reports
                                                 <span class="caret"></span></a>
                                             <ul class="dropdown-menu">
-                                                <li><a href="{{asset('projects/idleItems')}}">Idle Items</a></li>
-                                                <li><a href="{{asset('projects/myIdleItemsRequest')}}">Requested Idle Items</a></li>
+                                                {{--<li><a href="{{asset('projects/idleItems')}}">Idle Items</a></li>--}}
+                                                {{--<li><a href="{{asset('projects/myIdleItemsRequest')}}">Requested Idle Items</a></li>--}}
                                                 <li><a href="{{asset('projects/engineerStoreOrders')}}">Material Issue Reports</a></li>
                                                 <li><a href="{{asset('reports/projectReceivingItems')}}/{{Session::get('project_id')}}">Material Delivery Reports</a></li>
+                                                <li><a href="{{asset('reports/projectReceivingToolsList')}}">Assets/Tools Delivery Reports</a></li>
                                                 <li><a href="{{asset('reports/projectInventoryList')}}/{{Session::get('project_id')}}">Project Inventory List</a></li>
+                                                <li><a href="{{asset('projects/projectReceivedMaterials')}}">Received Materials</a></li>
+                                                <li><a href="{{asset('projects/projectReceivedToolsReport')}}">Received Asset/Tools</a></li>
+                                                <li><a href="{{asset('projects/projectReturnedMaterials')}}">Returned Materials</a></li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="dropdown">
+                                            <a href="#" class="dropdown-toggle" type="button" data-toggle="dropdown">
+                                                <i class="notika-icon notika-form"></i>
+                                                Idle Items
+                                                <span class="caret"></span></a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="{{asset('projects/idleItems')}}">Items</a></li>
+                                                <li><a href="{{asset('projects/myIdleItemsRequest')}}">Requested Items</a></li>
                                             </ul>
                                         </div>
                                     </li>
                                 @endif
                                 @endif
                                 @if(Auth::user()->user_type == 3)
-                                        <li><a href="{{asset('reports/projectInventoryList')}}/{{Session::get('project_id')}}">Project Inventory List</a></li>
-                                        <li><a href="{{asset('projects/pendingMaterialRequests')}}">Pending Issue Request</a></li>
-                                        <li><a href="{{asset('projects/idleItemsRequests')}}">Idle Items Requests</a></li>
-                                        <li><a href="{{asset('/storeReturnedItems')}}">Returned Items Request</a></li>
+                                        <li><a href="{{asset('reports/projectInventoryList')}}/{{Session::get('project_id')}}"><i class="fa fa-list"></i> Project Inventory List</a></li>
+                                        <li><a href="{{asset('projects/pendingMaterialRequests')}}"><i class="fa fa-circle-o"></i> Pending Issue Request</a></li>
+                                        <li><a href="{{asset('projects/idleItemsRequests')}}"><i class="fa fa-exchange"></i> Idle Items Requests</a></li>
+                                        <li><a href="{{asset('/storeReturnedItems')}}"><i class="fa fa-undo"></i> Returned Items Request</a></li>
                                 @endif
                             </ul>
                         </div>

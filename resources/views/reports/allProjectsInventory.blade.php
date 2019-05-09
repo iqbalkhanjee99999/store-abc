@@ -98,11 +98,8 @@
                                         <td><a  href="{{asset('attachments/items_images/'.$val->photo)}}"><i class="fa fa-image"></i></a></td>
                                         <td>
                                             @if($val->is_idle == 0)
-                                                {{--<a  class="btn btn-success notika-btn-success" onclick="returnItem({{$val->project_item_id}})">Return To Store</a> &nbsp--}}
-                                                {{--<a  class="btn btn-danger notika-btn-danger" onclick="markAsIdle({{$val->project_item_id}})">Idle Item</a>--}}
                                                 <label>Funtional Item</label>
                                             @else
-                                                {{--<a  class="btn btn-warning notika-btn-warning" onclick="markAsFunctional({{$val->project_item_id}})">Functional Item</a>--}}
                                                 <label>Idle Item</label>
                                             @endif
                                         </td>

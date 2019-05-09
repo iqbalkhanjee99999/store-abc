@@ -22,6 +22,16 @@ class Category extends Model
         return $data;
     }
 
+    public function getProjectToolsCategories(){
+        $data = DB::table('tools_request_goods')
+            ->join('tools_categories','tools_request_goods.category_id','=','tools_categories.id')
+            ->where('project_id',Session('project_id'))
+            ->groupBy('tools_request_goods.category_id')
+            ->select('tools_categories.title','tools_categories.id')
+            ->get();
+        return $data;
+    }
+
     public function getProjectCategories($id){
         $data = DB::table('project_items')
             ->join('categories','project_items.category_id','=','categories.id')
@@ -91,6 +101,14 @@ class Category extends Model
         return $data;
     }
 
+    public function getCategoryItemsCount($id){
+        $data = DB::table('tools_category_items')
+            ->select(DB::raw('count(id) as total'))
+            ->where('category_id',$id)
+            ->first();
+        return $data->total;
+    }
+
     public function getToolsCategoryData($id){
         $data = DB::table('tools_categories')
             ->select('id','title')
@@ -141,6 +159,7 @@ class Category extends Model
     public function toolsCategoryItems($id){
         $data = DB::table('tools_category_items')
             ->where('category_id',$id)
+            ->where('project_recived',0)
             ->orderBy('id','desc')
             ->get();
         return $data;
@@ -154,6 +173,21 @@ class Category extends Model
             ->whereNotIn('id', $avalible_items)
             ->orderBy('id','desc')
             ->get();
+        return $data;
+    }
+
+    public function toolsSearchProjectCategoryItems($id,$avalible_items){
+        $data = DB::table('tools_request_goods')
+            ->join('tools_category_items','tools_request_goods.item_id','tools_category_items.id')
+            ->where('tools_request_goods.project_id',Session('project_id'))
+            ->where('tools_category_items.category_id',$id)
+            ->where('tools_category_items.tool_condition',0)
+            ->where('tools_request_goods.order_recieved',1)
+            ->whereNotIn('tools_category_items.id', $avalible_items)
+            ->orderBy('tools_category_items.id','desc')
+            ->get();
+
+
         return $data;
     }
 

@@ -55,6 +55,7 @@
                                     <th>Location</th>
                                     <th>Requested Qty</th>
                                     <th>Status</th>
+                                    <th>Actions</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -80,9 +81,12 @@
                                                         @endif
                                                     @elseif($val->proc_approval == 1 && $val->store_approval == 1 && $val->order_recieved == 1)
                                                         <label>Order Recieved</label>
+                                                    @elseif($val->proc_approval == 1 && $val->store_approval == 1 && $val->order_recieved == 2)
+                                                        <label style="color: palevioletred;">Materials Rejected</label>
                                                     @else
-                                                        <label class="text-success">Order Approved</label>
-                                                        <a onclick="materialOrderRecieved({{$val->requested_goods_id}},'{{$val->description}}','{{$val->model_no}}','{{$val->brand_name}}')" class="btn btn-success notika-btn-success col-md-offset-1">Order Recived</a>
+                                                        {{--<label class="text-success">Order Approved</label>--}}
+                                                        <a onclick="materialOrderRecieved({{$val->requested_goods_id}},'{{$val->description}}','{{$val->model_no}}','{{$val->brand_name}}')" class="btn btn-success notika-btn-success">Order Recived</a>
+                                                        <a onclick="materialOrderReject({{$val->requested_goods_id}})" class="btn btn-danger notika-btn-danger">Reject Material</a>
                                                     @endif
                                                 </td>
                                         </tr>
@@ -97,6 +101,7 @@
                                     <th>Location</th>
                                     <th>Requested Qty</th>
                                     <th>Status</th>
+                                    <th>Actions</th>
                                 </tr>
                                 </tfoot>
                             </table>

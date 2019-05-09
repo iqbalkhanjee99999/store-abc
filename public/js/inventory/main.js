@@ -126,6 +126,41 @@ function returnItem(id) {
     });
 }
 
+
+function returnProjectTool(id) {
+    var reason = $('#reason'+id).val();
+    debugger;
+    var basepath   =   window.location.origin;
+    swal({
+        title: 'Tool Will Be Returned To Main Store!',
+        text: "Are You Sure You Want to Return This Tool",
+        type: "warning",
+        confirmButtonText: "Yes Sure",
+        showCancelButton: true,
+    }).then(function () {
+        $.ajax({
+            type:"GET",
+            url: basepath+'/projects/returnToolToMainStore/'+id,
+            data:{reason:reason},
+            success: function(data) {
+                debugger;
+                if(data != ''){
+                    swal({
+                        title: 'Error !',
+                        text: data,
+                        type: "error",
+                        confirmButtonText: "Ok",
+                    }).then(function () {
+
+                    });
+                }else{
+                    location.reload();
+                }
+            }
+        });
+    });
+}
+
 function markAsIdle(id) {
     var basepath   =   window.location.origin;
     swal({
@@ -156,8 +191,40 @@ function markAsIdle(id) {
         });
     });
 }
-function markAsFunctional(id) {
+
+
+function markToolAsIdle(id) {
     var basepath   =   window.location.origin;
+    swal({
+        title: 'Tool Will Be Marked As Idle Tool !',
+        text: "Are You Sure You Want to Idle This Tool",
+        type: "warning",
+        confirmButtonText: "Yes Sure",
+        showCancelButton: true,
+    }).then(function () {
+        $.ajax({
+            type:"GET",
+            url: basepath+'/projects/markStoreToolAsIdle/'+id,
+            success: function(data) {
+                if(data != ''){
+                    swal({
+                        title: 'Error !',
+                        text: data,
+                        type: "error",
+                        confirmButtonText: "Ok",
+                    }).then(function () {
+
+                    });
+                }else{
+                    location.reload();
+                }
+
+            }
+        });
+    });
+}
+function markAsFunctional(id) {
+    var basepath = window.location.origin;
     swal({
         title: 'Make Item Functional in Project!',
         text: "Are You Sure You Want to Make  This Item Functional",
@@ -166,8 +233,28 @@ function markAsFunctional(id) {
         showCancelButton: true,
     }).then(function () {
         $.ajax({
+            type: "GET",
+            url: basepath + '/projects/markStoreItemAsFunctional/' + id,
+            success: function (data) {
+                debugger;
+                location.reload();
+            }
+        });
+    });
+}
+
+    function markToolAsFunctional(id) {
+    var basepath   =   window.location.origin;
+    swal({
+        title: 'Make Tool Functional in Project!',
+        text: "Are You Sure You Want to Make  This Too Functional",
+        type: "warning",
+        confirmButtonText: "Yes Sure",
+        showCancelButton: true,
+    }).then(function () {
+        $.ajax({
             type:"GET",
-            url: basepath+'/projects/markStoreItemAsFunctional/'+id,
+            url: basepath+'/projects/markStoreToolAsFunctional/'+id,
             success: function(data) {
                 debugger;
                 location.reload();

@@ -60,6 +60,25 @@ class RecivingGoodsController extends Controller
         die(json_encode($data));
     }
 
+    public function getProjectToolsCategoryItems(Request $request,$id){
+
+        $numOccurences = $request->numOccurences;
+
+        $category = new Category();
+        $categoryInfo = $category->getToolsCategoryData($id);
+        $items = $category->getCategoryItemsCount($id);
+        $items_count = $items + $numOccurences;
+        if($items_count < 10){
+            $items_count = '00'.($items_count);
+        }elseif($items_count > 9 &&$items_count < 100){
+            $items_count = '0'.($items_count);
+        }
+        $asset_no = strtoupper(substr($categoryInfo->title,0,2)).$items_count;
+        $data['asset_no'] = $asset_no;
+
+        die(json_encode($data));
+    }
+
     public function getItemDetails(Request $request){
 
         $item_id = $request->item_id;

@@ -126,7 +126,12 @@ class ProjectsController extends Controller
     }
 
     public function projectReceivingTools(){
-        return view('projects/projectReceivingTools');
+
+        $category = new Category();
+        $categories = $category->getAllToolsCategories();
+        return view('projects/projectReceivingTools',compact('categories'));
+
+//        getProjectToolsCategories
     }
 
     public function projectAddRecivingMaterialsData(Request $request){
@@ -230,6 +235,70 @@ class ProjectsController extends Controller
         return redirect()->back()->with('success','Request Added. Please Wait For Approval');
     }
 
+    public function addProjectToolsRequest(Request $request){
+
+        if($images = $request->file('image')){
+
+            foreach ($images as $k => $image){
+
+                $fileNameWithExtension  = $request->file('file')->getClientOriginalName();
+                $fileName               = pathinfo($fileNameWithExtension, PATHINFO_FILENAME);
+                $fileExtension          = strtolower($image->getClientOriginalExtension());
+
+                if ($fileExtension == 'jpg' || $fileExtension == 'jpeg' || $fileExtension == 'png' ) {
+                    $fileNameToStore    = $fileName . '_' . time() . '.' . $fileExtension;
+
+                    $path   =   public_path() . '/attachments/items_images/';
+                    if(!is_dir ( $path))
+                        $path   =   public_path() . '/attachments/items_images/';
+
+                    $image->move($path,$fileNameToStore);
+                    $data['image'][$k] = $fileNameToStore;
+                } else {
+                    return redirect()->back()->with('error','incorrect Image format');
+                }
+            }
+        }
+
+        if ($file = $request->file('file')) {
+            $fileNameWithExtension  = $request->file('file')->getClientOriginalName();
+            $fileName               = pathinfo($fileNameWithExtension, PATHINFO_FILENAME);
+            $fileExtension          = strtolower($file->getClientOriginalExtension());
+
+            if ($fileExtension == 'pdf' || $fileExtension == 'docx' || $fileExtension == 'xlsx' || $fileExtension == 'xls') {
+                $fileNameToStore    = $fileName . '_' . time() . '.' . $fileExtension;
+
+                $path   =   public_path() . '/attachments/files/';
+                if(!is_dir ( $path))
+                    $path   =   public_path() . '/attachments/files/';
+
+                $file->move($path,$fileNameToStore);
+                $data['file'] = $fileNameToStore;
+            } else {
+                return redirect()->back()->with('error','incorrect file format');
+            }
+        }
+
+        $current_date_time = Carbon::now()->toDateTimeString();
+
+        $data['project_id']     = $request->project_id;
+        $data['categories']     = $request->categories;
+        $data['description']     = $request->description;
+        $data['model']          = $request->model;
+        $data['location']       = $request->location;
+        $data['asset_no']       = $request->asset_no;
+        $data['reciving_from']  = $request->reciving_from;
+        $data['created_at']  = $current_date_time;
+        $data['updated_at']  = $current_date_time;
+
+
+        $project = new Project();
+        $project->ProjectAddRecivingToolsData($data);
+
+        return redirect(asset('projects/projectReceivingTools'))->with('success','Request Successull');
+
+    }
+
     public function pendingMaterialRequests($id = 0){
 
         if($id > 0){
@@ -299,6 +368,20 @@ class ProjectsController extends Controller
         return view('projects.engineerStoreOrders')->with('data',$data);
     }
 
+    public function issuedToEngineers(){
+        $goods  = new RequestedGoods();
+        $data   = $goods->materialsIssuedToEngineers();
+
+        return view('projects.materialsIssuedToEngineers')->with('data',$data);
+    }
+
+    public function issuedToSubStores(){
+        $goods  = new RequestedGoods();
+        $data   = $goods->materialsIssuedToSubStores();
+
+        return view('projects.materialsIssuedToSubStores')->with('data',$data);
+    }
+
     public function markItemAsRecievedFromStore($id){
 
         $project = new Project();
@@ -312,12 +395,27 @@ class ProjectsController extends Controller
         $data       = $project->markStoreItemAsIdle($id);
         die($data);
     }
+
+    public function markStoreToolAsIdle($id){
+
+        $project    = new Project();
+        $data       = $project->markStoreToolAsIdle($id);
+        die($data);
+    }
     public function markStoreItemAsFunctional($id){
 
         $project    = new Project();
         $data       = $project->markStoreItemAsFunctional($id);
         die($data);
     }
+
+    public function markStoreToolAsFunctional($id){
+
+        $project    = new Project();
+        $data       = $project->markStoreToolAsFunctional($id);
+        die($data);
+    }
+
     public function returnItemToMainStore(Request $request){
 
         $id     = $request->id;
@@ -339,11 +437,39 @@ class ProjectsController extends Controller
 
     }
 
+    public function returnToolToMainStore(Request $request){
+
+        $id     = $request->id;
+        $reason = $request->reason;
+        $project    = new Project();
+        $project_id       = $project->returnToolToMainStore($id,$reason);
+
+        $requestedGoods = new RequestedGoods();
+        $user_id        = $requestedGoods->getStoreKeeperId($project_id);
+
+        $noti['title']          = 'Tool Return Requested';
+        $noti['description']    = 'Tool Return Requested For '. Session::get('project_name');
+        $noti['link']           = '/storeReturnedTools';
+        $noti['user_id']        = $user_id;
+        $noti['project_id']     = $project_id;
+
+        $notification = new Notifications();
+        $notification->storeKeeperNotification($noti);
+
+    }
+
     public function idleItems(){
         $project    = new Project();
         $data       = $project->getIdleItems();
 
         return view('projects.idleItems')->with('data',$data);
+    }
+
+     public function idleTools(){
+        $project    = new Project();
+        $data       = $project->idleTools();
+
+        return view('projects.idleTools')->with('data',$data);
     }
 
     public function requestIdleItems(Request $request){
@@ -368,6 +494,27 @@ class ProjectsController extends Controller
 
     }
 
+    public function requestIdleTools(Request $request){
+        $data['id']         = $request->id;
+        $project_id         = $request->project_id;
+
+        $project = new Project();
+        $project->requestIdleTools($data);
+
+        $requestedGoods = new RequestedGoods();
+        $user_id        = $requestedGoods->getStoreKeeperId($project_id);
+
+        $noti['title']          = 'Idle Tools Requested';
+        $noti['description']    = 'Tools Requested For '. Session::get('project_name');
+        $noti['link']           = 'projects/idleToolsRequests';
+        $noti['user_id']        = $user_id;
+        $noti['project_id']     = $project_id;
+
+        $notification = new Notifications();
+        $notification->storeKeeperNotification($noti);
+
+    }
+
     public function idleItemsRequests($id = 0){
 
         if($id > 0){
@@ -378,6 +525,18 @@ class ProjectsController extends Controller
         $data       =  $project->idleItemsRequests();
 
         return view('projects.idleItemsRequests')->with('data',$data);
+    }
+
+    public function idleToolsRequests($id = 0){
+
+        if($id > 0){
+            $noti = new Notifications();
+            $noti->changeStatusToRead($id);
+        }
+        $project    = new Project();
+        $data       =  $project->idleToolsRequests();
+
+        return view('projects.idleToolsRequests')->with('data',$data);
     }
 
     public function approveRequestIdleItems(Request $request){
@@ -399,6 +558,25 @@ class ProjectsController extends Controller
 
     }
 
+    public function approveRequestIdleTools(Request $request){
+
+        $data['id']         = $request->id;
+        $data['row_id']     = $request->row_id;
+
+        $project    = new Project();
+        $data2      = $project->approveIdleToolsRequest($data);
+
+        $noti['title']          = 'Request Approved ';
+        $noti['description']    = 'Idle Tools Request Approved By Store Keeper';
+        $noti['link']           = 'projects/myIdleToolsRequest';
+        $noti['user_id']        = $data2->requested_user_id;
+        $noti['project_id']     = $data2->requested_project_id;
+
+        $notification = new Notifications();
+        $notification->engineerSendNotification($noti);
+
+    }
+
     public function myIdleItemsRequest($id = 0){
 
         if($id > 0){
@@ -412,6 +590,19 @@ class ProjectsController extends Controller
         return view('projects.myIdleItemsRequests')->with('data',$data);
     }
 
+    public function myIdleToolsRequest($id = 0){
+
+        if($id > 0){
+            $noti = new Notifications();
+            $noti->changeStatusToRead($id);
+        }
+
+        $project    = new Project();
+        $data       = $project->myIdleToolsRequest();
+
+        return view('projects.myIdleToolsRequest')->with('data',$data);
+    }
+
     public function idleItemsRecevied(Request $request){
         $data['item_id']    = $request->item_id;
         $data['quantity']   = $request->quantity;
@@ -419,6 +610,14 @@ class ProjectsController extends Controller
 
         $project = new Project();
         $project->idleItemsRecevied($data);
+    }
+
+    public function idleToolsRecevied(Request $request){
+        $data['item_id']    = $request->item_id;
+        $data['row_id']     = $request->row_id;
+
+        $project = new Project();
+        $project->idleToolsRecevied($data);
     }
 
     public function rejectIdleItemsRequest(Request $request){
@@ -431,6 +630,23 @@ class ProjectsController extends Controller
         $noti['title']          = 'Request Rejected ';
         $noti['description']    = 'Idle Items Request Rejected By Store Keeper';
         $noti['link']           = 'projects/myIdleItemsRequest';
+        $noti['user_id']        = $data->requested_user_id;
+        $noti['project_id']     = $data->requested_project_id;
+
+        $notification = new Notifications();
+        $notification->engineerSendNotification($noti);
+    }
+
+    public function rejectIdleToolRequest(Request $request){
+
+        $row_id     = $request->row_id;
+
+        $project    = new Project();
+        $data       = $project->rejectIdleToolRequest($row_id);
+
+        $noti['title']          = 'Request Rejected ';
+        $noti['description']    = 'Idle Tool Request Rejected By Store Keeper';
+        $noti['link']           = 'projects/myIdleToolsRequest';
         $noti['user_id']        = $data->requested_user_id;
         $noti['project_id']     = $data->requested_project_id;
 
@@ -455,6 +671,23 @@ class ProjectsController extends Controller
 
     }
 
+    public function storeApproveReturnedTools(Request $request){
+        $data['row_id'] = $request->row_id;
+        $data['project_id'] = $request->project_id;
+        $data['item_id'] = $request->item_id;
+
+        $project = new Project();
+        $project->storeApproveReturnedTools($data);
+
+        $noti['title']          = 'Tool Returned';
+        $noti['description']    = 'Tool Returned To Store . Please Take Further Actions';
+        $noti['link']           = '/returnedTools';
+
+        $notification = new Notifications();
+        $notification->storeManagerSendNotification($noti);
+
+    }
+
     public function storeRejectReturnedItems(Request $request){
         $data['row_id'] = $request->row_id;
         $data['project_id'] = $request->project_id;
@@ -472,5 +705,103 @@ class ProjectsController extends Controller
         $notification = new Notifications();
         $notification->engineerSendNotification($noti);
 
+    }
+
+    public function storeRejectReturnedTool(Request $request){
+        $data['row_id'] = $request->row_id;
+        $data['project_id'] = $request->project_id;
+        $data['item_id'] = $request->item_id;
+
+        $project = new Project();
+        $project_data = $project->storeRejectReturnedTool($data);
+
+        $noti['title']          = 'Request Rejected';
+        $noti['description']    = 'Tools Returned Request Rejected By StoreKeeper';
+        $noti['link']           = '/reports/projectToolsList';
+        $noti['user_id']        = $project_data->engineer_id;
+        $noti['project_id']     = $project_data->project_id;
+
+        $notification = new Notifications();
+        $notification->engineerSendNotification($noti);
+
+    }
+
+    public function storeManagerRejectReturnedItems(Request $request){
+        $data['row_id'] = $request->row_id;
+        $data['project_id'] = $request->project_id;
+        $data['item_id'] = $request->item_id;
+
+        $project = new Project();
+        $project_data =  $project->storeManagerRejectReturnedItems($data);
+
+        $noti['title']          = 'Request Rejected';
+        $noti['description']    = 'Items Returned Request Rejected By Store Manager';
+        $noti['link']           = '/reports/projectInventoryList/'.$project_data->project_id;
+        $noti['user_id']        = $project_data->engineer_id;
+        $noti['project_id']     = $project_data->project_id;
+
+        $notification = new Notifications();
+        $notification->engineerSendNotification($noti);
+
+        $requestedGoods   = new RequestedGoods();
+        $noti['user_id']  = $requestedGoods->getStoreKeeperId($noti['project_id']);
+
+        $notification->storeKeeperNotification($noti);
+    }
+
+
+    public function storeManagerRejectReturnedTools(Request $request){
+        $data['row_id'] = $request->row_id;
+        $data['project_id'] = $request->project_id;
+        $data['item_id'] = $request->item_id;
+
+        $project = new Project();
+        $project_data =  $project->storeManagerRejectReturnedTools($data);
+
+        $noti['title']          = 'Request Rejected';
+        $noti['description']    = 'Tool Returned Request Rejected By Store Manager';
+        $noti['link']           = '/reports/projectToolsList';
+        $noti['user_id']        = $project_data->engineer_id;
+        $noti['project_id']     = $project_data->project_id;
+
+        $notification = new Notifications();
+        $notification->engineerSendNotification($noti);
+
+        $requestedGoods   = new RequestedGoods();
+        $noti['user_id']  = $requestedGoods->getStoreKeeperId($noti['project_id']);
+
+        $notification->storeKeeperNotification($noti);
+    }
+
+    public function projectReceivedMaterials(){
+
+        $goods  = new RequestedGoods();
+        $data   = $goods->projectReceivedMaterials();
+
+        return view('projects.projectReceivedMaterials',compact('data'));
+    }
+
+    public function projectReceivedToolsReport(){
+
+        $goods  = new RequestedGoods();
+        $data   = $goods->projectReceivedToolsReport();
+
+        return view('projects.projectReceivedToolsReport',compact('data'));
+    }
+
+    public function RecivedMaterialsFromSubStore(){
+
+        $goods  = new RequestedGoods();
+        $data   = $goods->RecivedMaterialsFromSubStore();
+
+        return view('projects.RecivedMaterialsFromSubStore',compact('data'));
+    }
+
+    public function projectReturnedMaterials(){
+
+        $goods  = new RequestedGoods();
+        $data   = $goods->projectReturnedMaterials();
+
+        return view('projects.projectReturnedMaterials',compact('data'));
     }
 }

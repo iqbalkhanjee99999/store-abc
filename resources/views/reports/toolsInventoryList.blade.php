@@ -71,7 +71,7 @@
 
                             </div>
 
-                            <table class="table table-hover">
+                            <table class="table table-hover" id="data-table-basic">
                                 <thead>
                                 <tr>
                                     <th>Category</th>
@@ -102,7 +102,7 @@
                                                     @elseif($val->is_taken ==2 && $val->tool_condition == 0)
                                                         <label class="text-info">Waiting Approval</label>
                                                     @elseif($val->is_taken == 1 && $val->tool_condition == 0)
-                                                        <label>Recevied By Site</label>
+                                                        <label>Taken</label>
                                                     @elseif($val->is_taken == 1 &&  $val->tool_condition == 1)
                                                         <label class="text-warning"> Under Maintenance</label>
                                                     @elseif($val->is_taken == 1 &&  $val->tool_condition == 2)

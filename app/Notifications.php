@@ -80,10 +80,6 @@ class Notifications extends Model
 
     public function engineerSendNotification($noti){
 
-        if(!isset($noti['project_id'])){
-            $noti['project_id'] = 0;
-        }
-
         $notification_id = DB::table('notifications')
             ->insertGetId([
                 'title'         => $noti['title'],
@@ -91,6 +87,7 @@ class Notifications extends Model
                 'link'          => $noti['link'],
                 'created_at'    => date('Y-m-d H:i:s')
             ]);
+
 
         DB::table('notification_users')
             ->insert([
@@ -131,6 +128,7 @@ class Notifications extends Model
     }
 
     public function changeStatusToRead($id){
+
         DB::table('notification_users')
             ->where('notification_users.notification_id',$id)
             ->update([

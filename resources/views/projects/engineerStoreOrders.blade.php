@@ -19,7 +19,7 @@
                                     </div>
                                     <div class="breadcomb-ctn" style="margin-top: 10px;">
                                         <h2>{{Session::get('project_name')}}</h2>
-                                        <p>Store Orders</p>
+                                        <p>Materials Issued</p>
                                     </div>
                                 </div>
                             </div>
@@ -40,8 +40,9 @@
                     <div class="data-table-list">
                         <div class="basic-tb-hd">
                             <ul class="nav nav-tabs">
-                                <li class="active"><a href="{{asset('requestedGoods/MyOrders')}}"><h2>Materials</h2></a></li>
-                                {{--<li><a href="{{asset('requestedGoods/MyToolsOrders')}}"><h2>Assets/Tools</h2></a></li>--}}
+                                <li class="active"><a href="{{asset('projects/engineerStoreOrders')}}"><h2>My Orders</h2></a></li>
+                                <li><a href="{{asset('projects/issuedToEngineers')}}"><h2>Issued To Site</h2></a></li>
+                                <li><a href="{{asset('projects/issuedToSubStores')}}"><h2>Issued To Sub Stores</h2></a></li>
                             </ul>
                         </div>
                         <div class="table-responsive">

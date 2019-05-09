@@ -244,13 +244,21 @@ class CategoriesController extends Controller
 
         $category = new Category();
         $categoryInfo = $category->getToolsCategoryData($request->id);
+        $items_count = $category->getCategoryItemsCount($request->id);
+
+        if($items_count < 10){
+            $items_count = '00'.($items_count+1);
+        }elseif($items_count > 9 &&$items_count < 100){
+            $items_count = '0'.($items_count+1);
+        }
+        $asset_no = strtoupper(substr($categoryInfo->title,0,2)).$items_count;
 
             if(isset($request->item_id)){
                 $data    = $category->getToolsItemData($request->item_id);
-                return view('categories.newItem')->with('category',$categoryInfo)->with('data',$data)->with('tool',1);
+                return view('categories.newItem')->with('category',$categoryInfo)->with('data',$data)->with('tool',1)->with('asset_no',$asset_no);
             }
             else{
-                return view('categories.newItem')->with('category',$categoryInfo)->with('tool',1);
+                return view('categories.newItem')->with('category',$categoryInfo)->with('tool',1)->with('asset_no',$asset_no);
             }
     }
 
