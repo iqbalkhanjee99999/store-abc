@@ -2,51 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2d440722-4be2-443e-8564-24022a39b3c6" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/attachments/items_images/abc_logo_1557832233.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/attachments/items_images/abc_logo_1557832247.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/attachments/items_images/abc_logo_1557832257.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/attachments/items_images/abc_logo_1557832270.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/attachments/items_images/abc_logo_1557832278.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/attachments/items_images/abc_logo_1557832287.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/attachments/files/28.1 - NCO, JUNIORS &amp; SOLDIERS MESS....._1557222538_1557999311_1558001924.xlsx" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/attachments/files/28.1 - NCO, JUNIORS &amp; SOLDIERS MESS....._1557833043.xlsx" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/attachments/items_images/28.1 - NCO, JUNIORS &amp; SOLDIERS MESS....._1557222538_1557999311_1558001924.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/attachments/items_images/28.1 - NCO, JUNIORS &amp; SOLDIERS MESS....._1557833043.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/Console/Commands/IdleNotification.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/ZAT1I9~M/laravel-2019-05-12.log" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resources/views/projects/RecivedToolsFromSubStore.blade.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resources/views/projects/projectReturnedTools.blade.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resources/views/projects/toolsIssuedToSubStores.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js.zip" afterPath="$PROJECT_DIR$/public/js.zip" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/storeabc.zip" afterPath="$PROJECT_DIR$/storeabc.zip" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Category.php" afterPath="$PROJECT_DIR$/app/Category.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Console/Kernel.php" afterPath="$PROJECT_DIR$/app/Console/Kernel.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/HomeController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/HomeController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/ProjectsController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/ProjectsController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/ReportsController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/ReportsController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/RequestedGoodsController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/RequestedGoodsController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Notifications.php" afterPath="$PROJECT_DIR$/app/Notifications.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Project.php" afterPath="$PROJECT_DIR$/app/Project.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/RequestedGoods.php" afterPath="$PROJECT_DIR$/app/RequestedGoods.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/database.php" afterPath="$PROJECT_DIR$/config/database.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/categories/main.js" afterPath="$PROJECT_DIR$/public/js/categories/main.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/categories/toolsCategoryItems.blade.php" afterPath="$PROJECT_DIR$/resources/views/categories/toolsCategoryItems.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/includes/menu.blade.php" afterPath="$PROJECT_DIR$/resources/views/includes/menu.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/layouts/app.blade.php" afterPath="$PROJECT_DIR$/resources/views/layouts/app.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/projects/getStoreReturnedItems.blade.php" afterPath="$PROJECT_DIR$/resources/views/projects/getStoreReturnedItems.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/projects/materialsIssuedToEngineers.blade.php" afterPath="$PROJECT_DIR$/resources/views/projects/materialsIssuedToEngineers.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/projects/materialsIssuedToSubStores.blade.php" afterPath="$PROJECT_DIR$/resources/views/projects/materialsIssuedToSubStores.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/projects/pendingMaterialRequests.blade.php" afterPath="$PROJECT_DIR$/resources/views/projects/pendingMaterialRequests.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/projects/projectReceivedToolsReport.blade.php" afterPath="$PROJECT_DIR$/resources/views/projects/projectReceivedToolsReport.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/projects/projectReturnedMaterials.blade.php" afterPath="$PROJECT_DIR$/resources/views/projects/projectReturnedMaterials.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/projects/returnedItems.blade.php" afterPath="$PROJECT_DIR$/resources/views/projects/returnedItems.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/projects/returnedTools.blade.php" afterPath="$PROJECT_DIR$/resources/views/projects/returnedTools.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/reports/showProjectToolsFormItems.blade.php" afterPath="$PROJECT_DIR$/resources/views/reports/showProjectToolsFormItems.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/requestedGoods/addRequest.blade.php" afterPath="$PROJECT_DIR$/resources/views/requestedGoods/addRequest.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/requestedGoods/myOrders.blade.php" afterPath="$PROJECT_DIR$/resources/views/requestedGoods/myOrders.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/requestedGoods/myToolsOrders.blade.php" afterPath="$PROJECT_DIR$/resources/views/requestedGoods/myToolsOrders.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/web.php" afterPath="$PROJECT_DIR$/routes/web.php" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -698,12 +654,12 @@
       <workItem from="1557813145319" duration="9049000" />
       <workItem from="1557896853650" duration="10906000" />
       <workItem from="1557983704940" duration="11471000" />
-      <workItem from="1558243253200" duration="1309000" />
+      <workItem from="1558243253200" duration="2025000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="696196000" />
+    <option name="totallyTimeSpent" value="696912000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
