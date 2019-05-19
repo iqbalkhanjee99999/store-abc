@@ -240,18 +240,19 @@ class Project extends Model
                 'category_items.photo'
             );
             $q->where('project_items.project_id',$project_id);
-            $q->where('project_items.under_store_approval',0);
+            $q->where('project_items.under_store_approval','!=',1);
+            $q->where('project_items.quantity','>',0);
             $data = $q->get();
         return $data;
     }
 
-     public function projectToolsList($project_id){
+     public function projectToolsList(){
          $data = DB::table('project_tools')
              ->join('tools_category_items','project_tools.item_id','=','tools_category_items.id')
              ->join('tools_categories','project_tools.category_id','=','tools_categories.id')
              ->join('projects','project_tools.project_id','=','projects.id')
              ->where('project_tools.project_id',Session('project_id'))
-             ->where('project_tools.under_store_approval',0)
+             ->where('project_tools.under_store_approval','!=',1)
              ->where('project_tools.is_recevied',0)
              ->where('project_tools.store_return_approve',0)
              ->select(
@@ -262,6 +263,9 @@ class Project extends Model
                  'projects.project_name'
              )
              ->get();
+
+//         echo "<pre>";
+//         print_r(Session('project_id'));die();
 
          return $data;
     }
@@ -978,10 +982,11 @@ class Project extends Model
             ->where('item_id', $data['item_id'])
             ->update([
                 'project_id' => Session('project_id'),
+                'store_return_approve' => 0,
+                'under_store_approval' => 0,
                 'is_recevied' => 0,
                 'is_idle' => 0,
                 ]);
-
 
     }
 
@@ -991,6 +996,72 @@ class Project extends Model
             ->where('id',$id)
             ->first();
         return $data->file;
+    }
+
+    public function notifiyUserForIdleITems(){
+
+        $current_date_time = Carbon::now(); //current time
+        $new_date = $current_date_time->subMonths(1); //current time with subtraction of one month
+
+        $data = DB::table('project_items') // get all expired items
+        ->join('category_items','project_items.item_id','=','category_items.id')
+            ->join('projects','project_items.project_id','=','projects.id')
+            ->select('project_id','item_id','category_items.description','project_items.id as project_item_id','project_name')
+            ->where('project_items.is_idle',0)
+            ->where('project_items.updated_at','<',$new_date)
+            ->get();
+
+        if(count($data) > 0){
+            foreach ($data as $item){ //update expired items to Idle Items
+                DB::table('project_items')
+                    ->where('id',$item->project_item_id)
+                    ->update(['is_idle' => 1]);
+
+                $users_id = DB::table('project_users') // get engineers of the project of which item is expired
+                    ->where('project_id',$item->project_id)
+                    ->select('engineer_id')
+                    ->get();
+
+
+                if(count($users_id) > 0){
+                    foreach($users_id as $user){
+                        $notification_id2 = DB::table('notifications') //create notificaiton for Engineers
+                            ->insertGetId([
+                                'title'         => 'Item: '.$item->description.' Added To Idle List',
+                                'description'   => 'Item had more than one month in store without use',
+                                'link'          => 'reports/projectInventoryList/'.$item->project_id,
+                                'created_at'    => date('Y-m-d H:i:s')
+                            ]);
+
+                        DB::table('notification_users') //send notification to engineers
+                            ->insert([
+                                'notification_id'   => $notification_id2,
+                                'user_id'           => $user->engineer_id,
+                                'project_id'        => $item->project_id,
+                                'is_read'           => 0,
+                                'created_at'        => date('Y-m-d H:i:s')
+                            ]);
+                    }
+                }
+
+                $notification_id = DB::table('notifications') //create notification for Admin
+                    ->insertGetId([
+                        'title'         => $item->project_name .'/'.$item->description.'item Added To Idle List',
+                        'description'   => 'Item had more than one month in store without use',
+                        'link'          => 'reports/allProjectsInventory',
+                        'created_at'    => date('Y-m-d H:i:s')
+                    ]);
+
+                DB::table('notification_users') // send notification to admin
+                    ->insert([
+                        'notification_id'   => $notification_id,
+                        'user_id'           => 3,
+                        'is_read'           => 0,
+                        'created_at'        => date('Y-m-d H:i:s')
+                    ]);
+
+            }
+        }
     }
 
 }

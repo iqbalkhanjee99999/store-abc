@@ -19,6 +19,7 @@
                                     </div>
                                     <div class="breadcomb-ctn" style="margin-top: 10px;">
                                         <h2>{{Session::get('project_name')}}</h2>
+                                        <p>Pending Material Requests</p>
                                     </div>
                                 </div>
                             </div>
@@ -38,7 +39,6 @@
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="data-table-list">
                         <div class="basic-tb-hd">
-                            <h2>Pending Material Requests</h2>
                         </div>
                         <div class="table-responsive">
                             <table id="data-table-basic" class="table table-hover">

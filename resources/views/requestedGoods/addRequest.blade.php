@@ -55,6 +55,7 @@
                                                         <th>Requested Qty</th>
                                                         <th>Location</th>
                                                         <th>Actions</th>
+
                                                     </tr>
                                                     <tr>
                                                         <td>

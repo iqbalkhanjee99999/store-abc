@@ -68,7 +68,7 @@
                                         <td>{{$val->asset_no}}</td>
                                         <td><a  href="{{asset('attachments/items_images/'.$val->image)}}"><i class="fa fa-image"></i></a></td>
                                         <td>{{$val->location}}</td>
-                                        <td>{{$val->created_at}}</td>
+                                        <td> {{Carbon\Carbon::parse($val->created_at)->format('Y-m-d') }}</td>
                                     </tr>
                                 @endforeach
                                 </tbody>

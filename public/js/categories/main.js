@@ -81,6 +81,29 @@ function materialOrderReject(requested_goods_id) {
     });
 }
 
+function toolOrderReject(requested_goods_id,tool_id) {
+
+    debugger;
+    var basepath   =   window.location.origin;
+    swal({
+        title: 'Order will be rejected',
+        text: "Are You Sure you want to reject this order",
+        type: "warning",
+        confirmButtonText: "Yes Sure",
+        showCancelButton: true,
+    }).then(function () {
+        $.ajax({
+            type:"GET",
+            data:{tool_id: tool_id},
+            url: basepath+'/requestedGoods/rejectToolOrder/'+requested_goods_id,
+            success: function(data) {
+                debugger;
+                location.reload();
+            }
+        });
+    });
+}
+
 function itemReciveFromStore(id) {
     var basepath   =   window.location.origin;
     swal({
@@ -551,6 +574,29 @@ function rejectReturendTool(row_id, project_id, item_id) {
             type:"GET",
             data:{row_id:row_id,project_id:project_id,item_id:item_id},
             url: basepath+'/projects/storeManagerRejectReturnedTools',
+            success: function(data) {
+                debugger;
+                location.reload();
+            }
+        });
+    });
+}
+
+function rejectReturendItem(row_id, project_id, item_id) {
+
+    var basepath    =   window.location.origin;
+
+    swal({
+        title: 'Warning!!',
+        text: "Return Tool request will be rejected",
+        type: "warning",
+        confirmButtonText: "Reject",
+        showCancelButton: true,
+    }).then(function () {
+        $.ajax({
+            type:"GET",
+            data:{row_id:row_id,project_id:project_id,item_id:item_id},
+            url: basepath+'/projects/storeManagerRejectReturnedItems',
             success: function(data) {
                 debugger;
                 location.reload();

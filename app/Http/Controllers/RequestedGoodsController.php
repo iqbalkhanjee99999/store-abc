@@ -23,7 +23,8 @@ class RequestedGoodsController extends Controller
         $category   = new Category();
         $categories = $category->getAllCategories();
 
-        if(Auth::user()->user_type == 1001 ||Auth::user()->user_type == 101 || Auth::user()->user_type == 1 || Auth::user()->user_type == 3){
+        if(Auth::user()->user_type == 1001 ||Auth::user()->user_type == 101 ||
+            Auth::user()->user_type == 1 || Auth::user()->user_type == 3){
             return view('requestedGoods.addRequest')->with('categories',$categories);
         }
         else{
@@ -35,7 +36,8 @@ class RequestedGoodsController extends Controller
         $category   = new Category();
         $categories = $category->getAllToolsCategories();
 
-        if(Auth::user()->user_type == 1001 ||Auth::user()->user_type == 101 || Auth::user()->user_type == 1 || Auth::user()->user_type == 3){
+        if(Auth::user()->user_type == 1001 ||Auth::user()->user_type == 101 ||
+            Auth::user()->user_type == 1 || Auth::user()->user_type == 3){
             return view('requestedGoods.toolsRequest')->with('categories',$categories);
         }
         else{
@@ -127,6 +129,7 @@ class RequestedGoodsController extends Controller
         $project_id = $goods->procurementReject($id);
         $goods->updateQuantity($id);
 
+
         $noti['title']          = 'Request Rejected';
         $noti['description']    = 'Rejected By Procurement Manager';
         $noti['link']           = 'requestedGoods/MyOrders';
@@ -137,6 +140,8 @@ class RequestedGoodsController extends Controller
         $notification->engineerSendNotification($noti);
 
         return redirect()->back();
+
+
     }
 
     public function storeManagerReject($id){
@@ -302,6 +307,22 @@ class RequestedGoodsController extends Controller
         $noti['title']          = 'Materials Rejected';
         $noti['description']    = 'Project : '.$project_name.'. Engineer rejected materials';
         $noti['link']           = 'requestedGoods/PendingRequests';
+        $noti['user_id']        = 1;
+
+
+        $notification = new Notifications();
+        $notification->storeManagerSendNotification($noti);
+    }
+
+    public function rejectToolOrder(Request $request,$id){
+
+        $tool_id = $request->tool_id;
+        $tool = new RequestedGoods();
+        $tool->rejectToolOrder($id,$tool_id);
+
+        $noti['title']          = 'Tool Rejected';
+        $noti['description']    = 'Project : '.Session('project_name').'. Engineer rejected Tool';
+        $noti['link']           = 'requestedGoods/PendingToolsRequests';
         $noti['user_id']        = 1;
 
 

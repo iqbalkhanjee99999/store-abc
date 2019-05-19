@@ -1,7 +1,3 @@
-{{--@php--}}
-{{--echo "<pre>";--}}
-{{--print_r($data);die();--}}
-{{--@endphp--}}
 @extends('layouts.app')
 @include('includes.header')
 @include('includes.menu')

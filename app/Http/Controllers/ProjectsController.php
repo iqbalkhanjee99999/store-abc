@@ -382,6 +382,13 @@ class ProjectsController extends Controller
         return view('projects.materialsIssuedToSubStores')->with('data',$data);
     }
 
+    public function toolsIssuedToSubStores(){
+        $goods  = new RequestedGoods();
+        $data   = $goods->toolsIssuedToSubStores();
+
+        return view('projects.toolsIssuedToSubStores')->with('data',$data);
+    }
+
     public function markItemAsRecievedFromStore($id){
 
         $project = new Project();
@@ -797,11 +804,27 @@ class ProjectsController extends Controller
         return view('projects.RecivedMaterialsFromSubStore',compact('data'));
     }
 
+    public function RecivedToolsFromSubStore(){
+
+        $goods  = new RequestedGoods();
+        $data   = $goods->RecivedToolsFromSubStore();
+
+        return view('projects.RecivedToolsFromSubStore',compact('data'));
+    }
+
     public function projectReturnedMaterials(){
 
         $goods  = new RequestedGoods();
         $data   = $goods->projectReturnedMaterials();
 
         return view('projects.projectReturnedMaterials',compact('data'));
+    }
+
+    public function projectReturnedTools(){
+
+        $goods  = new RequestedGoods();
+        $data   = $goods->projectReturnedTools();
+
+        return view('projects.projectReturnedTools',compact('data'));
     }
 }

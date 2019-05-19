@@ -54,7 +54,7 @@
                                 <tbody>
                                 @foreach($data as $k => $val)
                                     <tr>
-                                        <td>{{$k+1}}</td>
+                                        <td>{{$val->requested_goods_id}}</td>
                                         <td>{{$val->description}}</td>
                                         <td>{{$val->model_no}}</td>
                                         <td>{{$val->brand_name}}</td>
@@ -63,12 +63,14 @@
                                             @if($val->store_approval == 0 && $val->order_recieved == 0)
                                                 <label class="text-primary">Waiting For Store Manager Approval</label>
                                             @elseif($val->store_approval == 2 && $val->order_recieved == 0)
-                                                <label class="text-danger">Order Rejected Store Manager</label>
+                                                <label class="text-danger">Order Rejected By Store Manager</label>
                                             @elseif($val->store_approval == 1 && $val->order_recieved == 0)
-                                                <label class="text-success">Order Approved</label>
-                                                <a onclick="orderRecieved({{$val->requested_goods_id}},'{{$val->description}}','{{$val->model_no}}','{{$val->brand_name}}')" class="btn btn-success notika-btn-success col-md-offset-1">Order Recived</a>
+                                                <a onclick="orderRecieved({{$val->requested_goods_id}},'{{$val->description}}','{{$val->model_no}}','{{$val->brand_name}}')" class="btn btn-success notika-btn-success">Order Recived</a>
+                                                <a onclick="toolOrderReject({{$val->requested_goods_id}},{{$val->tool_id}})" class="btn btn-danger notika-btn-danger">Reject Tool</a>
                                             @elseif($val->store_approval == 1 && $val->order_recieved == 1)
                                                 <label>Order Recieved</label>
+                                            @elseif($val->store_approval == 1 && $val->order_recieved == 2)
+                                                <label style="color: palevioletred;">Tool Rejected</label>
                                             @endif
                                         </td>
                                     </tr>

@@ -116,7 +116,7 @@
                                     <th>#</th>
                                     <th>Description</th>
                                     <th>Asset No</th>
-                                    <th>Brand/Model</th>>
+                                    <th>Brand/Model</th>
                                     <th>Zone No</th>
                                     <th>Column No</th>
                                     <th>Shelf No</th>

@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class Category extends Model
 {
@@ -39,6 +40,7 @@ class Category extends Model
            ->groupBy('project_items.category_id')
             ->select('categories.title','categories.id')
             ->get();
+
         return $data;
     }
 
@@ -147,6 +149,7 @@ class Category extends Model
             ->join('category_items','project_items.item_id','=','category_items.id')
             ->where('project_items.category_id',$id)
             ->where('project_items.is_idle',0)
+            ->where('project_items.project_id',Session('project_id'))
             ->whereNotIn('project_items.item_id', $avalible_items)
             ->select('project_items.item_id','category_items.description','category_items.brand_name')
             ->groupBy('project_items.item_id')

@@ -76,10 +76,10 @@ class RequestedGoods extends Model
                     'category_id'       => $category->category_id,
                     'item_id'           => $data['items'][$k],
                     'requested_user_id' => Auth::user()->id,
-                    'project_id'      => Session('project_id'),
+                    'project_id'        => Session('project_id'),
                     'date'              => date('Y-m-d'),
                     'tools_user'        => $data['tools_user'][$k],
-                    'location'        => $data['location'][$k],
+                    'location'          => $data['location'][$k],
                 ]);
             DB::table('tools_category_items')
                 ->where('id',$data['items'][$k])
@@ -288,7 +288,7 @@ class RequestedGoods extends Model
             ->join('category_items','project_idle_items_request.item_id','=','category_items.id')
             ->join('categories','project_idle_items_request.category_id','=','categories.id')
             ->join('users','project_idle_items_request.requested_user_id','=','users.id')
-            ->join('projects','project_idle_items_request.requested_project_id','=','projects.id')
+            ->join('projects','project_idle_items_request.project_id','=','projects.id')
             ->where('is_recevied',1)
             ->where('requested_project_id',Session('project_id'))
             ->select(
@@ -297,6 +297,27 @@ class RequestedGoods extends Model
                 'project_idle_items_request.*',
                 'categories.*',
                 'category_items.*',
+                'projects.project_name',
+                'users.name'
+            )
+            ->get();
+
+        return $data;
+    }
+
+    public function RecivedToolsFromSubStore(){
+        $data = DB::table('project_idle_tools_request')
+            ->join('tools_category_items','project_idle_tools_request.item_id','=','tools_category_items.id')
+            ->join('tools_categories','project_idle_tools_request.category_id','=','tools_categories.id')
+            ->join('users','project_idle_tools_request.requested_user_id','=','users.id')
+            ->join('projects','project_idle_tools_request.project_id','=','projects.id')
+            ->where('is_recevied',1)
+            ->where('requested_project_id',Session('project_id'))
+            ->select(
+                'project_idle_tools_request.id as idle_items_request_id',
+                'project_idle_tools_request.*',
+                'tools_categories.*',
+                'tools_category_items.*',
                 'projects.project_name',
                 'users.name'
             )
@@ -327,10 +348,33 @@ class RequestedGoods extends Model
             ->where('store_approve',1)
             ->get();
 
-//        echo "<pre>";
-//        print_r($data);die();
         return $data;
+    }
 
+
+    public function projectReturnedTools(){
+        $data = DB::table('returned_tools')
+            ->join('projects','returned_tools.project_id','projects.id')
+            ->join('tools_category_items','returned_tools.item_id','tools_category_items.id')
+            ->join('tools_categories','tools_category_items.category_id','tools_categories.id')
+            ->select(
+                'tools_categories.title as category_name',
+                'tools_category_items.description as item_name',
+                'tools_category_items.brand_name',
+                'tools_category_items.model_no',
+                'returned_tools.date',
+                'returned_tools.engineer_name',
+                'returned_tools.reason',
+                'returned_tools.item_id',
+                'returned_tools.project_id',
+                'projects.project_name',
+                'returned_tools.id'
+            )
+            ->where('project_id',Session('project_id'))
+            ->where('store_approve',1)
+            ->get();
+
+        return $data;
     }
 
     public function myStoreOrders(){
@@ -390,6 +434,26 @@ class RequestedGoods extends Model
         return $data;
     }
 
+     public function toolsIssuedToSubStores(){
+        $data = DB::table('project_idle_tools_request')
+            ->join('tools_category_items','project_idle_tools_request.item_id','=','tools_category_items.id')
+            ->join('tools_categories','project_idle_tools_request.category_id','=','tools_categories.id')
+            ->join('users','project_idle_tools_request.requested_user_id','=','users.id')
+            ->join('projects','project_idle_tools_request.requested_project_id','=','projects.id')
+            ->where('storekeeper_approve',1)
+            ->where('project_id',Session('project_id'))
+            ->select(
+                'project_idle_tools_request.id as idle_tools_request_id',
+                'project_idle_tools_request.*',
+                'tools_categories.*',
+                'tools_category_items.*',
+                'projects.project_name',
+                'users.name'
+            )
+            ->get();
+        return $data;
+    }
+
     public function myToolsOrders(){
         $data = DB::table('tools_request_goods')
             ->join('tools_category_items','tools_request_goods.item_id','=','tools_category_items.id')
@@ -401,6 +465,7 @@ class RequestedGoods extends Model
                 'tools_request_goods.*',
                 'tools_categories.*',
                 'tools_category_items.*',
+                'tools_category_items.id as tool_id',
                 'users.name'
             )
             ->get();
@@ -603,6 +668,20 @@ class RequestedGoods extends Model
             ->where('request_goods.id',$id)
             ->first();
         return $data->project_name;
+    }
+
+    public function rejectToolOrder($id,$tool_id){
+
+        DB::table('tools_request_goods')
+            ->where('id',$id)
+            ->update([
+                'order_recieved'   => 2,
+            ]);
+        DB::table('tools_category_items')
+            ->where('id',$tool_id)
+            ->update([
+                'is_taken'        => 0,
+            ]);
     }
 
     public function getAllReturnedGoods(){

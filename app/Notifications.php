@@ -139,6 +139,7 @@ class Notifications extends Model
     public function getAllNotifications(){
         $data = DB::table('notifications')
             ->join('notification_users','notifications.id','=','notification_users.notification_id')
+            ->where('user_id',Auth::id())
             ->orderBy('notifications.id','desc')
             ->get();
         return $data;

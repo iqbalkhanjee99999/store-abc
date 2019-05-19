@@ -40,20 +40,18 @@ class HomeController extends Controller
 
         $notification = new Notifications();
         $notifications = $notification->getUsersNotifications();
-        $notificationCount = $notification->countUnReadNotifications();
+        
+//        $notificationCount = $notification->countUnReadNotifications();
 
         $project = new Project();
         $projects = $project->getMyProjects();
 
+        $project = new Project();
+        $project->notifiyUserForIdleITems();
+
 
         if(Auth::user()->user_type == 1001 || Auth::user()->user_type == 101 || Auth::user()->user_type == 2){
-            return view('home')
-                ->with('categories',$categories)
-                ->with('items',$items)->with('users',$users)
-                ->with('totalReciving',$totalReciving)
-                ->with('notifications',$notifications)
-                ->with('totalItems',$totalItems)
-                ->with('totalRequested',$totalRequested);
+            return view('home',compact('categories','items','users','totalReciving','notifications','totalItems','totalRequested'));
         }
         elseif(Auth::user()->user_type == 1 || Auth::user()->user_type == 3){
             return view('projects/selectProject')->with('projects',$projects);

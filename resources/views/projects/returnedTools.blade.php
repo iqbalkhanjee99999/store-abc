@@ -18,7 +18,7 @@
                                         <i class="notika-icon notika-form"></i>
                                     </div>
                                     <div class="breadcomb-ctn" style="margin-top: 10px;">
-                                        <h2>Returned Items</h2>
+                                        <h2>Returned Goods</h2>
                                     </div>
                                 </div>
                             </div>
@@ -38,6 +38,10 @@
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="data-table-list">
                         <div class="basic-tb-hd">
+                            <ul class="nav nav-tabs">
+                                <li><a href="{{asset('/returnedItems')}}"><h2>Returned Materials</h2></a></li>
+                                <li class="active"><a href="{{asset('/returnedTools')}}"><h2>Returned Assets/Tools</h2></a></li>
+                            </ul>
                         </div>
                         <div class="table-responsive">
                             <table id="data-table-basic" class="table table-hover">
@@ -47,7 +51,7 @@
                                     <th>Project</th>
                                     <th>Engineer Name</th>
                                     <th>Category</th>
-                                    <th>Item</th>
+                                    <th>Tool</th>
                                     <th>Model</th>
                                     <th>Asset No</th>
                                     <th>Reason</th>
@@ -131,7 +135,7 @@
                                     <th>Project</th>
                                     <th>Engineer Name</th>
                                     <th>Category</th>
-                                    <th>Item</th>
+                                    <th>Tool</th>
                                     <th>Model</th>
                                     <th>Asset No</th>
                                     <th>Reason</th>

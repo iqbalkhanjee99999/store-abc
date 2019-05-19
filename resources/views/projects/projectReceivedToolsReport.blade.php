@@ -40,8 +40,8 @@
                     <div class="data-table-list">
                         <div class="basic-tb-hd">
                             <ul class="nav nav-tabs">
-                                <li  class="active"><a href="{{asset('projects/projectReceivedMaterials')}}"><h2>Main Store</h2></a></li>
-                                <li><a href="{{asset('projects/RecivedToolsFromSubStore')}}"><h2>Sub Stores</h2></a></li>
+                                <li  class="active"><a href="{{asset('projects/projectReceivedToolsReport')}}"><h2>Main Store</h2></a></li>
+                                <li><a href="{{asset('projects/RecivedToolsFromSubStore')}}"><h2>Sub Store</h2></a></li>
                             </ul>
                         </div>
                         <div class="table-responsive">

@@ -55,13 +55,12 @@
                                     <th>Location</th>
                                     <th>Requested Qty</th>
                                     <th>Status</th>
-                                    <th>Actions</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($data as $k => $val)
                                         <tr>
-                                            <td>{{$k+1}}</td>
+                                            <td>{{$val->requested_goods_id}}</td>
                                             <td>{{$val->description}}</td>
                                             <td>{{$val->model_no}}</td>
                                             <td>{{$val->brand_name}}</td>
@@ -101,7 +100,6 @@
                                     <th>Location</th>
                                     <th>Requested Qty</th>
                                     <th>Status</th>
-                                    <th>Actions</th>
                                 </tr>
                                 </tfoot>
                             </table>

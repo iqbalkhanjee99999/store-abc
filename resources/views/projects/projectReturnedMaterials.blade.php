@@ -38,12 +38,12 @@
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="data-table-list">
-                        {{--<div class="basic-tb-hd">--}}
-                            {{--<ul class="nav nav-tabs">--}}
-                                {{--<li  class="active"><a href="{{asset('projects/projectReceivedMaterials')}}"><h2>Main Store</h2></a></li>--}}
-                                {{--<li><a href="{{asset('projects/RecivedMaterialsFromSubStore')}}"><h2>Sub Stores</h2></a></li>--}}
-                            {{--</ul>--}}
-                        {{--</div>--}}
+                        <div class="basic-tb-hd">
+                            <ul class="nav nav-tabs">
+                                <li  class="active"><a href="{{asset('projects/projectReturnedMaterials')}}"><h2>Returned Materials</h2></a></li>
+                                <li><a href="{{asset('projects/projectReturnedTools')}}"><h2>Returned Assets/Tools</h2></a></li>
+                            </ul>
+                        </div>
                         <div class="table-responsive">
                             <table id="data-table-basic" class="table table-hover">
                                 <thead>

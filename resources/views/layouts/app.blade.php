@@ -1,7 +1,7 @@
     <main class="py-4">
         <script src="{{asset('jquery-3.3.1.min.js')}}"></script>
         @yield('content')
-        @if(Auth::user()->user_type == 1 || Auth::user()->user_type == 3)
+        @if(Auth::user()->user_type == 1)
             <script>
                 if(localStorage.getItem('sub_store') == 1){
                     $('#Home').addClass('active');
@@ -15,6 +15,20 @@
                 });
                 $('#Home ul li ').click(function () {
                     localStorage.setItem('sub_store',1);
+                });
+            </script>
+        @elseif(Auth::user()->user_type == 3)
+            <script>
+                if(localStorage.getItem('sub_store') == 0){
+
+                    $('#Home').removeClass('active');
+                    $('#mailbox').addClass('active');
+                }else{
+                    $('#Home').addClass('active');
+                    $('#mailbox').removeClass('active');
+                }
+                $('#mailbox ul li ').click(function () {
+                    localStorage.setItem('sub_store',0);
                 });
             </script>
         @else

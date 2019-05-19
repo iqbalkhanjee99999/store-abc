@@ -74,6 +74,7 @@ Route::get('requestedGoods/markToolAsDemaged/{id}', 'RequestedGoodsController@ma
 Route::get('requestedGoods/markToolAsRecieved/{id}', 'RequestedGoodsController@markToolAsRecieved');
 Route::get('requestedGoods/markMaterialAsRecieved/{id}', 'RequestedGoodsController@markMaterialAsRecieved');
 Route::get('requestedGoods/rejectMaterialOrder/{id}', 'RequestedGoodsController@rejectMaterialOrder');
+Route::get('requestedGoods/rejectToolOrder/{id}', 'RequestedGoodsController@rejectToolOrder');
 Route::get('requestedGoods/selectedProject', 'RequestedGoodsController@selectedProject');
 Route::get('requestedGoods/returnedToStore/{id}', 'RequestedGoodsController@returnedToStore');
 Route::get('requestedGoods/returnedItemToStore/{id}', 'RequestedGoodsController@returnedItemToStore');
@@ -134,6 +135,7 @@ Route::get('projects/storeKeeperReject/{id}', 'ProjectsController@storeKeeperRej
 Route::get('projects/engineerStoreOrders/{id?}', 'ProjectsController@engineerStoreOrders');
 Route::get('projects/issuedToEngineers', 'ProjectsController@issuedToEngineers');
 Route::get('projects/issuedToSubStores', 'ProjectsController@issuedToSubStores');
+Route::get('projects/toolsIssuedToSubStores', 'ProjectsController@toolsIssuedToSubStores');
 Route::get('projects/markItemAsRecievedFromStore/{id}', 'ProjectsController@markItemAsRecievedFromStore');
 Route::get('projects/markStoreItemAsIdle/{id}', 'ProjectsController@markStoreItemAsIdle');
 Route::get('projects/markStoreToolAsIdle/{id}', 'ProjectsController@markStoreToolAsIdle');
@@ -162,6 +164,8 @@ Route::get('projects/storeRejectReturnedTool', 'ProjectsController@storeRejectRe
 Route::get('projects/storeManagerRejectReturnedItems', 'ProjectsController@storeManagerRejectReturnedItems');
 Route::get('projects/storeManagerRejectReturnedTools', 'ProjectsController@storeManagerRejectReturnedTools');
 Route::get('projects/projectReceivedMaterials', 'ProjectsController@projectReceivedMaterials');
-Route::get('projects/projectReceivedToolsReport', 'ProjectsController@projectReceivedToolsReport');
 Route::get('projects/RecivedMaterialsFromSubStore', 'ProjectsController@RecivedMaterialsFromSubStore');
+Route::get('projects/projectReceivedToolsReport', 'ProjectsController@projectReceivedToolsReport');
+Route::get('projects/RecivedToolsFromSubStore', 'ProjectsController@RecivedToolsFromSubStore');
 Route::get('projects/projectReturnedMaterials', 'ProjectsController@projectReturnedMaterials');
+Route::get('projects/projectReturnedTools', 'ProjectsController@projectReturnedTools');

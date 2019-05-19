@@ -363,15 +363,18 @@ class ReportsController extends Controller
             $noti = new Notifications();
             $noti->changeStatusToRead($noti_id);
         }
-        $project_id    = Session::get('project_id');
-
         $project = new Project();
-        $data = $project->projectToolsList($project_id);
+        $data = $project->projectToolsList();
 
         return view('reports/projectToolsList')->with('data',$data);
     }
 
-    public function allProjectsInventory(Request $request){
+    public function allProjectsInventory(Request $request,$id = 0){
+
+        if($id > 0){
+            $noti = new Notifications();
+            $noti->changeStatusToRead($id);
+        }
 
         $project_id = $request->project_id;
 
